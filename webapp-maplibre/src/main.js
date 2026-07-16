@@ -1,60 +1,94 @@
-import './style.css'
-import javascriptLogo from './assets/javascript.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import { setupCounter } from './counter.js'
+const tombolSembunyi = document.getElementById('btn-toggle-konten');
+const tombolWarna = document.getElementById('btn-ubah-warna');
 
-document.querySelector('#app').innerHTML = `
-<section id="center">
-  <div class="hero">
-    <img src="${heroImg}" class="base" width="170" height="179">
-    <img src="${javascriptLogo}" class="framework" alt="JavaScript logo"/>
-    <img src="${viteLogo}" class="vite" alt="Vite logo" />
-  </div>
-  <div>
-    <h1>Get started</h1>
-    <p>Edit <code>src/main.js</code> and save to test <code>HMR</code></p>
-  </div>
-  <button id="counter" type="button" class="counter"></button>
-</section>
+const kotakKartu = document.getElementById('konten-kartu');
+const heading = document.getElementsByClassName('navbar')[0];
+const footer = document.getElementsByClassName('footer')[0];
 
-<div class="ticks"></div>
+// Fungsi untuk mengubah warna latar belakang panel tugas
 
-<section id="next-steps">
-  <div id="docs">
-    <svg class="icon" role="presentation" aria-hidden="true"><use href="/icons.svg#documentation-icon"></use></svg>
-    <h2>Documentation</h2>
-    <p>Your questions, answered</p>
-    <ul>
-      <li>
-        <a href="https://vite.dev/" target="_blank">
-          <img class="logo" src="${viteLogo}" alt="" />
-          Explore Vite
-        </a>
-      </li>
-      <li>
-        <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript" target="_blank">
-          <img class="button-icon" src="${javascriptLogo}" alt="">
-          Learn more
-        </a>
-      </li>
-    </ul>
-  </div>
-  <div id="social">
-    <svg class="icon" role="presentation" aria-hidden="true"><use href="/icons.svg#social-icon"></use></svg>
-    <h2>Connect with us</h2>
-    <p>Join the Vite community</p>
-    <ul>
-      <li><a href="https://github.com/vitejs/vite" target="_blank"><svg class="button-icon" role="presentation" aria-hidden="true"><use href="/icons.svg#github-icon"></use></svg>GitHub</a></li>
-      <li><a href="https://chat.vite.dev/" target="_blank"><svg class="button-icon" role="presentation" aria-hidden="true"><use href="/icons.svg#discord-icon"></use></svg>Discord</a></li>
-      <li><a href="https://x.com/vite_js" target="_blank"><svg class="button-icon" role="presentation" aria-hidden="true"><use href="/icons.svg#x-icon"></use></svg>X.com</a></li>
-      <li><a href="https://bsky.app/profile/vite.dev" target="_blank"><svg class="button-icon" role="presentation" aria-hidden="true"><use href="/icons.svg#bluesky-icon"></use></svg>Bluesky</a></li>
-    </ul>
-  </div>
-</section>
+tombolSembunyi.addEventListener('click', function() {
+    if (kotakKartu.style.display === 'none') {
+        kotakKartu.style.display = 'flex'; // Munculkan lagi
+        tombolSembunyi.innerText = 'Sembunyikan Kartu Informasi'; // Ganti teks tombol
+    } else {
+        kotakKartu.style.display = 'none'; // Sembunyikan/hilangkan
+        tombolSembunyi.innerText = 'Tampilkan Kartu Informasi'; // Ganti teks tombol
+    }
+});
 
-<div class="ticks"></div>
-<section id="spacer"></section>
-`
+tombolWarna.addEventListener('click', function() {
+ if (heading.style.backgroundColor === 'rgb(0, 51, 102)') {
+        heading.style.backgroundColor = 'rgb(139, 11, 11)';
+        footer.style.backgroundColor = 'rgb(139, 11, 11)';
+        tombolWarna.innerText = 'Kembalikan'; // Ganti teks tombol
+    } else {
+        heading.style.backgroundColor = 'rgb(0, 51, 102)';
+        footer.style.backgroundColor = 'rgb(0, 51, 102)';
+        tombolWarna.innerText = 'Ubah Warna'; // Ganti teks tombol
+    }
+});
 
-setupCounter(document.querySelector('#counter'))
+    const url = "https://geoserver.mapid.io/layers_new/get_layer?api_key=7b8019aa264248e89e3fd5b27253132f&layer_id=69ace1b8643f7636a769ce7c&project_id=69ab9fb96c69e6252868efaf";
+
+document.getElementById("btnLoad").addEventListener("click", async function() {
+  const status = document.getElementById("status");
+  const hasil = document.getElementById("hasil");
+
+  status.innerText = "⏳ Memuat data...";
+  hasil.innerHTML = "";
+
+  try {
+    const response = await fetch(url);
+    const data = await response.json();
+    const lokasi = data.features;
+
+    status.innerText = `✅ Berhasil memuat ${lokasi.length} lokasi`;
+
+    // 1. Buat struktur tabel dan header terlebih dahulu
+    const table = document.createElement("table");
+    table.classList.add("data-table"); // Class untuk styling CSS
+    
+    table.innerHTML = `
+      <thead>
+        <tr>
+          <th>No</th>
+          <th>Nama Lokasi</th>
+          <th>Wilayah (Kec/Kab)</th>
+          <th>Tipe & Status</th>
+          <th>Koordinat (Lat, Lng)</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    `;
+    
+    const tbody = table.querySelector("tbody");
+
+    // Filter yang punya NAMA, ambil 10 pertama
+    const dataTerfilter = lokasi
+      .filter(item => item.properties && item.properties.NAMA)
+      .slice(0, 10);
+
+    // 2. Masukkan data ke dalam baris tabel (row)
+    dataTerfilter.forEach((item, index) => {
+      const p = item.properties;
+      const [lng, lat] = item.geometry.coordinates;
+
+      const row = document.createElement("tr");
+      row.innerHTML = `
+        <td>${index + 1}</td>
+        <td><strong>${p.NAMA}</strong></td>
+        <td>📍 ${p.KECAMATAN || "-"}, ${p.KABKOT || "-"}</td>
+        <td>🏢 ${p.TIPE_2 || "-"} <br> <small>Status: ${p.STATUS || "-"}</small></td>
+        <td>🌐 ${lat.toFixed(5)}, ${lng.toFixed(5)}</td>
+      `;
+      tbody.appendChild(row);
+    });
+
+    // 3. Masukkan tabel yang sudah jadi ke dalam container #hasil
+    hasil.appendChild(table);
+
+  } catch (error) {
+    status.innerHTML = `❌ Gagal memuat: ${error.message}`;
+  }
+});

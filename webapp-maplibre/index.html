@@ -1,13 +1,68 @@
-<!doctype html>
-<html lang="en">
-  <head>
+<!DOCTYPE html>
+<html lang="id">
+<head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>webapp-maplibre</title>
-  </head>
-  <body>
-    <div id="app"></div>
-    <script type="module" src="/src/main.js"></script>
-  </body>
+    <title>Peta Digital Angkutan Pengumpan DKI Jakarta</title>
+    <link rel="stylesheet" href="./src/style.css">
+</head>
+<body>
+<!-- Navigation Bar -->
+    <header class="navbar" id="navbar-id">
+        <div class="logo-container">
+            <img src="https://www.undip.ac.id/wp-content/uploads/2023/10/web-undip-logo.png" alt="Logo Undip" class="logo">
+            <span class="logo-text">UNDIP</span>
+        </div>
+        <nav class="nav-menu">
+            <a href="index.html" class="nav-item">Beranda</a>
+            <a href="about.html" class="nav-item">Tentang</a>
+            <a href="map.html" class="nav-item">Maps</a>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Opening Section -->
+        <section class="opening-section" id="opening">
+            <h1>Selamat Datang di Peta Digital Angkutan Pengumpan</h1>
+            <p><strong>Informasi Geografis rute feeder/angkutan pengumpan Transjakarta di wilayah DKI Jakarta.</strong></p>
+        </section>
+        <!-- Cards Container -->
+        <section class="cards-container" id="konten-kartu">
+            <div class="card-box">
+                <h3>Rute Integrasi</h3>
+                <p>Menampilkan jalur angkutan pengumpan yang terhubung langsung dengan koridor utama Transjakarta.</p>
+            </div>
+            <div class="card-box">
+                <h3>Sebaran Halte</h3>
+                <p>Informasi titik koordinat lokasi halte pengumpan (bus-stop) untuk memudahkan mobilitas warga.</p>
+            </div>
+            <div class="card-box">
+                <h3>Analisis Aksesibilitas</h3>
+                <p>Modul peta digital ini membantu menganalisis jangkauan layanan angkutan umum di pemukiman padat.</p>
+            </div>
+        </section>
+
+       <!-- Kontrol Panel Dinamis -->
+        <section class="task-js-container" id="panel-tugas">
+            <h2>Kontrol Panel Dinamis</h2>
+
+            <div class="button-group">
+                <button id="btn-toggle-konten" class="btn-aksi">Sembunyikan Kartu Informasi</button>
+                <button id="btn-ubah-warna" class="btn-aksi">Ubah Mode Warna</button>
+            </div>
+        </section>
+        
+        <div class="fetch">  
+        <button id="btnLoad">Muat Data Lokasi</button>
+        <div id="status"></div>
+        <div id="hasil"></div>
+        </div>
+
+    </main>
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; 2026 Peta Digital Angkutan Pengumpan DKI Jakarta. Tugas Bootcamp WebGIS.</p>
+    </footer>
+</body>
 </html>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maps - Peta Digital Angkutan Pengumpan</title>
+    
+    <link href="https://unpkg.com/maplibre-gl@latest/dist/maplibre-gl.css" rel="stylesheet" />
+    
+    <link rel="stylesheet" href="./src/style.css">
+</head>
+<body>
+
+    <header class="navbar">
+        <div class="logo-container">
+            <img src="https://www.undip.ac.id/wp-content/uploads/2023/10/web-undip-logo.png" alt="Logo Undip" class="logo">
+            <span class="logo-text">UNDIP</span>
+        </div>
+        <nav class="nav-menu">
+            <a href="index.html" class="nav-item">Beranda</a>
+            <a href="about.html" class="nav-item">Tentang</a>
+            <a href="map.html" class="nav-item">Maps</a>
+        </nav>
+    </header>
+
+    <main>
+        <h1>Visualisasi Peta Rute Pengumpan</h1>
+        <p>Halaman ini menampilkan visualisasi spasial jaringan angkutan pengumpan Jakarta. Pada modul berikutnya, area ini akan diintegrasikan dengan WebGIS Interaktif (Leaflet.js / OpenLayers).</p>
+        
+        <div id="map" style="width: 100%; height: 500px; margin-top: 20px; border-radius: 8px;"></div>
+    </main>
+
+    <footer>
+        <p>© 2026 Peta Digital Angkutan Pengumpan DKI Jakarta. Tugas Bootcamp WebGIS.</p>
+    </footer>
+
+    <script type="module" src="./src/map.js"></script>
+</body>
+</html>
