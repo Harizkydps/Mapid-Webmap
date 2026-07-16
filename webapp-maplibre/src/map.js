@@ -1,5 +1,6 @@
 import { Map } from 'maplibre-gl';
 import naturalEarthData from "./data/ne.geojson?url";
+import areaData from "./data/adm_banten.geojson?url";
 
 const map = new Map({
     container: 'map', 
@@ -29,7 +30,7 @@ const map = new Map({
 map.on('load', () => {
 map.addSource('kota',{
     type: 'geojson',
-    data: "https://geoserver.mapid.io/layers_new/get_layer?api_key=f0e11141f5da4f159ffc532e8f835443&layer_id=6a2f54bfd56af8dd1e4dced0&project_id=6a2c169ca4b35352db758290"
+    data: naturalEarthData
 });
 
 map.addLayer({
@@ -43,4 +44,18 @@ map.addLayer({
         'circle-stroke-color': '#ffffff'
     }
 })
+
+map.addSource('area',{
+    type: 'geojson',
+    data: areaData
+});
+map.addLayer({
+    id: 'area-layer',
+    type: 'fill',
+    source: 'area',
+    paint: {
+        'fill-color': '#ffffff',
+        'fill-outline-color': '#000000'
+    }
+});
 });
