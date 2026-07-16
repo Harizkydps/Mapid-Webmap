@@ -29,7 +29,7 @@ const map = new Map({
 map.on('load', () => {
 map.addSource('kota',{
     type: 'geojson',
-    data: naturalEarthData
+    data: "https://geoserver.mapid.io/layers_new/get_layer?api_key=f0e11141f5da4f159ffc532e8f835443&layer_id=6a2f54bfd56af8dd1e4dced0&project_id=6a2c169ca4b35352db758290"
 });
 
 map.addLayer({
