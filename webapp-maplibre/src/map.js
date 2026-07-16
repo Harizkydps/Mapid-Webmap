@@ -1,6 +1,7 @@
 import { Map } from 'maplibre-gl';
 import naturalEarthData from "./data/ne.geojson?url";
 import areaData from "./data/adm_banten.geojson?url";
+import flagImage from "./data/flag.png?url";
 
 const map = new Map({
     container: 'map', 
@@ -28,6 +29,7 @@ const map = new Map({
 //   ]
 // }
 map.on('load', () => {
+// Layer Tipe Circle (Point)
 map.addSource('kota',{
     type: 'geojson',
     data: naturalEarthData
@@ -45,6 +47,7 @@ map.addLayer({
     }
 })
 
+// Layer Tipe Fill (Polygon)
 map.addSource('area',{
     type: 'geojson',
     data: areaData
@@ -58,4 +61,22 @@ map.addLayer({
         'fill-outline-color': '#000000'
     }
 });
+
+// Layer Tipe Raster (Tile)
+map.addSource('Flag',{
+    type: 'image',
+    url: flagImage,
+    coordinates: [
+    [-6.5, 57.5],  // 1. Kiri Atas
+    [ 2.0, 57.5],  // 2. Kanan Atas
+    [ 2.0, 50.0],  // 3. Kanan Bawah
+    [-6.5, 50.0]   // 4. Kiri Bawah
+]
+});
+
+map.addLayer({
+    id: 'Flag-layer',
+    type: 'raster',
+    source: 'Flag',
+})
 });
