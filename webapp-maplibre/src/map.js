@@ -1,6 +1,6 @@
 import { Map } from 'maplibre-gl';
-import {addKotaLayer, addAdmBanten} from './layers/vector.js';
-import flagImage from "./data/flag.png?url";
+import {addKotaLayer, addAdmBanten,} from './layers/vector.js';
+import {addFlagLayer} from './layers/raster.js';
 
 const map = new Map({
     container: 'map', 
@@ -27,27 +27,11 @@ const map = new Map({
 //     }
 //   ]
 // }
+
 map.on('load', () => {
 
 // Layer Tipe Circle (Point)
     addKotaLayer(map);
     addAdmBanten(map);
-
-// Layer Tipe Raster (Tile)
-map.addSource('Flag',{
-    type: 'image',
-    url: flagImage,
-    coordinates: [
-    [-6.5, 57.5],  // 1. Kiri Atas
-    [ 2.0, 57.5],  // 2. Kanan Atas
-    [ 2.0, 50.0],  // 3. Kanan Bawah
-    [-6.5, 50.0]   // 4. Kiri Bawah
-]
-});
-
-map.addLayer({
-    id: 'Flag-layer',
-    type: 'raster',
-    source: 'Flag',
-})
+    addFlagLayer(map);
 });
