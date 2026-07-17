@@ -1,6 +1,5 @@
 import { Map } from 'maplibre-gl';
-import naturalEarthData from "./data/ne.geojson?url";
-import areaData from "./data/adm_banten.geojson?url";
+import {addKotaLayer, addAdmBanten} from './layers/vector.js';
 import flagImage from "./data/flag.png?url";
 
 const map = new Map({
@@ -29,38 +28,10 @@ const map = new Map({
 //   ]
 // }
 map.on('load', () => {
+
 // Layer Tipe Circle (Point)
-map.addSource('kota',{
-    type: 'geojson',
-    data: naturalEarthData
-});
-
-map.addLayer({
-    id: 'kota-layer',
-    type: 'circle',
-    source: 'kota',
-    paint: {
-        'circle-radius': 7,
-        'circle-color': '#ff0000',
-        'circle-stroke-width': 1,
-        'circle-stroke-color': '#ffffff'
-    }
-})
-
-// Layer Tipe Fill (Polygon)
-map.addSource('area',{
-    type: 'geojson',
-    data: areaData
-});
-map.addLayer({
-    id: 'area-layer',
-    type: 'fill',
-    source: 'area',
-    paint: {
-        'fill-color': '#ffffff',
-        'fill-outline-color': '#000000'
-    }
-});
+    addKotaLayer(map);
+    addAdmBanten(map);
 
 // Layer Tipe Raster (Tile)
 map.addSource('Flag',{
