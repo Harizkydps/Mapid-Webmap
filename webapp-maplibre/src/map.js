@@ -1,4 +1,4 @@
-import { Map,AttributionControl } from 'maplibre-gl';
+import { Map,AttributionControl,FullscreenControl} from 'maplibre-gl';
 import {addKotaLayer, addAdmBanten,} from './layers/vector.js';
 import {addFlagLayer} from './layers/raster.js';
 
@@ -12,8 +12,10 @@ const map = new Map({
 map.addControl(new AttributionControl({
     compact: true,
     customAttribution: "Natural Earth Dataset, England"
-
 }));
+
+map.addControl(new FullscreenControl());
+
 map.on('load', () => {
 
 // Layer Tipe Circle (Point)
