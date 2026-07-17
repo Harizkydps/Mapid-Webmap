@@ -1,6 +1,26 @@
-import { Map,AttributionControl,FullscreenControl} from 'maplibre-gl';
+import { Map,AttributionControl,FullscreenControl,GlobeControl, LogoControl} from 'maplibre-gl';
 import {addKotaLayer, addAdmBanten,} from './layers/vector.js';
 import {addFlagLayer} from './layers/raster.js';
+
+export class englandflagControl{
+    onAdd(map){
+        this._map = map;
+        this._container = document.createElement('div');
+        this._container.className = 'maplibregl-ctrl';
+        this._container.innerHTML = `
+            <img
+                src="${addFlagLayer}"
+                alt="Logo"
+                style="width: 50px"
+            >
+        `
+        return this._container;
+    }
+    onRemove() {
+        this._container.remove();
+        this._map = undefined;
+    }
+}
 
 const map = new Map({
     container: 'map', 
@@ -15,6 +35,11 @@ map.addControl(new AttributionControl({
 }));
 
 map.addControl(new FullscreenControl());
+map.addControl(new GlobeControl());
+map.addControl(new LogoControl({
+    compact: false,
+}));
+map.addControl(new englandflagControl());
 
 map.on('load', () => {
 
