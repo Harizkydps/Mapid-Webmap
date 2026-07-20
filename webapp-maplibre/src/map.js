@@ -1,6 +1,7 @@
 import { Map,AttributionControl,FullscreenControl,GlobeControl, LogoControl} from 'maplibre-gl';
 import {addKotaLayer, addAdmBanten,} from './layers/vector.js';
 import {addFlagLayer} from './layers/raster.js';
+import flagImage from "./data/flag.png?url";
 
 export class englandflagControl{
     onAdd(map){
@@ -9,9 +10,9 @@ export class englandflagControl{
         this._container.className = 'maplibregl-ctrl';
         this._container.innerHTML = `
             <img
-                src="${addFlagLayer}"
+                src="${flagImage}"
                 alt="Logo"
-                style="width: 50px"
+                style="width: 70px"
             >
         `
         return this._container;
@@ -39,7 +40,7 @@ map.addControl(new GlobeControl());
 map.addControl(new LogoControl({
     compact: false,
 }));
-map.addControl(new englandflagControl());
+map.addControl(new englandflagControl(),"top-left");
 
 map.on('load', () => {
 
