@@ -1,7 +1,8 @@
-import { Map,AttributionControl,FullscreenControl,GlobeControl, LogoControl} from 'maplibre-gl';
+import { Map,AttributionControl,FullscreenControl,GlobeControl,LogoControl} from 'maplibre-gl';
 import {addKotaLayer, addAdmBanten,} from './layers/vector.js';
 import {addFlagLayer} from './layers/raster.js';
 import flagImage from "./data/flag.png?url";
+import {addKotaPopup} from './Popup/popup.js';
 
 export class englandflagControl{
     onAdd(map){
@@ -48,4 +49,13 @@ map.on('load', () => {
     addKotaLayer(map);
     addAdmBanten(map);
     addFlagLayer(map);
+
+map.on("click", "kota-layer", function(event) {
+        addKotaPopup(map, event);
+    });
+
 });
+
+// map.on("click","kota-layer",function(event){
+//     addKotaPopup(map,event)
+// });
