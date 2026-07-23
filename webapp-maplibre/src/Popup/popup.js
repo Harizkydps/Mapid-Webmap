@@ -1,10 +1,21 @@
 import { Popup } from "maplibre-gl";
 
 export function addKotaPopup(map, event) {
-    // 1. Buat popup baru di dalam fungsi (P besar)
-    // 2. Gunakan event.lngLat (L besar)
-    return new Popup()
-        .setLngLat(event.lngLat) 
-        .setHTML("<h5>Hello World</h5>")
-        .addTo(map);
+  // Ambil koordinat klik dari event
+  const coordinate = event.lngLat;
+  
+  // Ambil data properti jika layer kamu punya attribute (opsional)
+  const properties = event.features[0]?.properties;
+  const namaKota = properties.NAME
+  
+  // Tampilkan Popup
+  return new Popup()
+    .setLngLat(coordinate)
+    .setHTML(`
+      <div style="padding: 4px;">
+        <h4 style="margin: 0 0 4px 0;">${namaKota}</h4>
+        <small>Lng: ${coordinate.lng.toFixed(2)}, Lat: ${coordinate.lat.toFixed(2)}</small>
+      </div>
+    `)
+    .addTo(map);
 }
