@@ -26,7 +26,7 @@ export class englandflagControl {
 
 const map = new Map({
     container: 'map', 
-    style: 'https://demotiles.maplibre.org/globe.json',
+    style: 'https://demotiles.maplibre.org/style.json',
     center: [110.20971606819703, -7.493319607970615], // Magelang / Jateng area
     zoom: 7,
     cooperativeGestures: true
