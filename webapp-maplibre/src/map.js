@@ -3,6 +3,7 @@ import { addKotaLayer, addAdmBanten } from './layers/vector.js';
 import { addFlagLayer } from './layers/raster.js';
 import flagImage from "./data/flag.png?url";
 import { addKotaPopup } from './Popup/popup.js';
+import { storeAreaGeometry } from './engine/areaTools.js';
 
 export class englandflagControl {
     onAdd(map) {
@@ -49,6 +50,10 @@ map.on('load', () => {
     addFlagLayer(map);
 
 map.doubleClickZoom.disable();
+
+map.on("click","area-layer",function(event){
+    storeAreaGeometry(event)
+})
 
     // Event saat feature/titik di 'kota-layer' diklik
     map.on("click", "kota-layer", (event) => {
