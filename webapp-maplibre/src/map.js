@@ -28,7 +28,8 @@ const map = new Map({
     container: 'map', 
     style: 'https://demotiles.maplibre.org/globe.json',
     center: [110.20971606819703, -7.493319607970615], // Magelang / Jateng area
-    zoom: 7
+    zoom: 7,
+    cooperativeGestures: true
 });
 
 map.addControl(new AttributionControl({
@@ -46,6 +47,8 @@ map.on('load', () => {
     addKotaLayer(map);
     addAdmBanten(map);
     addFlagLayer(map);
+
+map.doubleClickZoom.disable();
 
     // Event saat feature/titik di 'kota-layer' diklik
     map.on("click", "kota-layer", (event) => {
