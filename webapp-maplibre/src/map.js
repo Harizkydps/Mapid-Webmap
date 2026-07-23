@@ -2,7 +2,7 @@ import { Map, AttributionControl, FullscreenControl, GlobeControl, LogoControl }
 import { addKotaLayer, addAdmBanten } from './layers/vector.js';
 import { addFlagLayer } from './layers/raster.js';
 import flagImage from "./data/flag.png?url";
-import { addKotaPopup } from './Popup/popup.js';
+import { addADMPopup, addKotaPopup } from './Popup/popup.js';
 import { storeAreaGeometry } from './engine/areaTools.js';
 
 export class englandflagControl {
@@ -51,9 +51,13 @@ map.on('load', () => {
 
 map.doubleClickZoom.disable();
 
-map.on("click","area-layer",function(event){
-    storeAreaGeometry(event)
-})
+map.on("click", "area-layer", function (event) {
+    // 1. Dapatkan hasil perhitungan/geometri dari areaTools
+    const areaData = storeAreaGeometry(event);
+
+    // 2. Kirim data tersebut ke fungsi Popup
+    addADMPopup(map, event, areaData);
+});
 
     // Event saat feature/titik di 'kota-layer' diklik
     map.on("click", "kota-layer", (event) => {
