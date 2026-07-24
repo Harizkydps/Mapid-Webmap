@@ -1,9 +1,11 @@
 import { Map, AttributionControl, FullscreenControl, GlobeControl, LogoControl } from 'maplibre-gl';
+import 'maplibre-gl/dist/maplibre-gl.css';
 import { addKotaLayer, addAdmBanten } from './layers/vector.js';
 import { addFlagLayer } from './layers/raster.js';
 import flagImage from "./data/flag.png?url";
 import { addADMPopup, addKotaPopup } from './Popup/popup.js';
 import { storeAreaGeometry } from './engine/areaTools.js';
+import { storeBufferGeometry } from './engine/bufferTools.js';
 
 export class englandflagControl {
     onAdd(map) {
@@ -49,19 +51,21 @@ map.on('load', () => {
     addAdmBanten(map);
     addFlagLayer(map);
 
-map.doubleClickZoom.disable();
+    map.doubleClickZoom.disable();
 
-map.on("click", "area-layer", function (event) {
-    // 1. Dapatkan hasil perhitungan/geometri dari areaTools
-    const areaData = storeAreaGeometry(event);
+    // Event Klik Area (Polygon ADM)
+    map.on("click", "area-layer", (event) => {
+        const areaData = storeAreaGeometry(event);
+        addADMPopup(map, event, areaData);
+    });
 
-    // 2. Kirim data tersebut ke fungsi Popup
-    addADMPopup(map, event, areaData);
-});
-
-    // Event saat feature/titik di 'kota-layer' diklik
-    map.on("click", "kota-layer", (event) => {
+    // PERBAIKAN: Buffer dipindahkan ke event Klik Kota (Titik/Point)
+    map.on("click", "kota-layer", async (event) => {
+        // 1. Tampilkan Popup Kota
         addKotaPopup(map, event);
+
+        // 2. Buat Buffer dari Titik Kota yang diklik
+        await storeBufferGeometry(map, event);
     });
 
     // Ubah kursor jadi pointer saat hover di atas 'kota-layer'
