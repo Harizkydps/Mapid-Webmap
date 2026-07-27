@@ -1,3 +1,5 @@
 ---
-alwaysApply: true
+globs: *.js
+alwaysApply: false
 ---
+- always use ES6 javascript rules
