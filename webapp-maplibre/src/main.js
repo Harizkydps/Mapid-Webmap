@@ -92,3 +92,7 @@ document.getElementById("btnLoad").addEventListener("click", async function() {
     status.innerHTML = `❌ Gagal memuat: ${error.message}`;
   }
 });
+
+export function health() {
+    return { "status": "ok" }, 200;
+}
