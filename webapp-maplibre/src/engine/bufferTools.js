@@ -1,5 +1,6 @@
 import { geojsonToWKT, wktToGeoJSON } from "@terraformer/wkt";
 import { addBufferLayer } from "../layers/vector";
+const API_BASE = import.meta.env.VITE_API_BASE_URL ?? "http://127.0.0.1:5000";
 
 export async function storeBufferGeometry(map, event) {
     // Mengambil geometri titik dari feature kota yang diklik
@@ -10,7 +11,7 @@ export async function storeBufferGeometry(map, event) {
 }
 
 async function computeBuffer(map, wkt) {
-    const response = await fetch("http://127.0.0.1:5000/geometry_manipulation/buffer", {
+    const response = await fetch(`${API_BASE}/geometry_manipulation/buffer`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ 

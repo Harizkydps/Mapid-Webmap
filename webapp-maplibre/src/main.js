@@ -93,6 +93,4 @@ document.getElementById("btnLoad").addEventListener("click", async function() {
   }
 });
 
-export function health() {
-    return { "status": "ok" }, 200;
-}
+

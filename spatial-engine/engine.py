@@ -93,3 +93,7 @@ def dijkstra():
         return shortest_path(start, end, network)
     except Exception as exc:
         return {"error": str(exc)}, 400
+
+@app.route("/health", methods=["GET"])
+def health():
+    return {"status": "ok"}, 200
