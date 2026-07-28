@@ -6,6 +6,12 @@
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
+body, html {
+    width: 100%;
+    height: 100%;
+    overflow-x: hidden; /* Mencegah scroll menyamping berlebih di HP */
+}
+
 /* Navbar Styles */
 .navbar {
     background-color: rgb(0, 51, 102);
@@ -98,11 +104,13 @@ main {
     justify-content: center; 
     gap: 20px;             
     padding: 20px 0;    
+    flex-wrap: wrap; /* Mencegah kartu memanjang ke samping */
 }
 
 /* Card Box Styles */
 .card-box {
     flex: 1;               
+    min-width: 280px;      
     max-width: 350px;      
     background-color: #ffffff; 
     padding: 25px;        
@@ -162,6 +170,7 @@ main h2 {
     display: flex;
     gap: 10px;
     margin-bottom: 20px;
+    flex-wrap: wrap;
 }
 
 .btn-aksi {
@@ -187,44 +196,45 @@ main h2 {
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); 
     border: 1px solid #e0e0e0;
+    overflow-x: auto; /* Mencegah tabel merusak layout HP */
 }
 
 /* Styling Tabel Data */
 .data-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 15px;
-  font-family: sans-serif;
-  background-color: #ffffff;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
-  overflow: hidden;
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+    font-family: sans-serif;
+    background-color: #ffffff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
 }
 
 .data-table th {
-  background-color: #003366; /* Menyesuaikan tema biru UNDIP di gambar */
-  color: white;
-  text-align: left;
-  padding: 12px 15px;
-  font-size: 14px;
+    background-color: #003366; 
+    color: white;
+    text-align: left;
+    padding: 12px 15px;
+    font-size: 14px;
 }
 
 .data-table td {
-  padding: 12px 15px;
-  border-bottom: 1px solid #dddddd;
-  color: #333333;
-  font-size: 14px;
-  vertical-align: middle;
+    padding: 12px 15px;
+    border-bottom: 1px solid #dddddd;
+    color: #333333;
+    font-size: 14px;
+    vertical-align: middle;
 }
 
-/* Efek zebra striping (baris belang-belang agar mudah dibaca) */
+/* Efek zebra striping */
 .data-table tbody tr:nth-of-type(even) {
-  background-color: #f8f9fa;
+    background-color: #f8f9fa;
 }
 
 /* Efek hover saat mouse mengarah ke baris */
 .data-table tbody tr:hover {
-  background-color: #f1f4f9;
+    background-color: #f1f4f9;
 }
 
 /* Table Styles (Halaman About) */
@@ -259,6 +269,7 @@ form {
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     max-width: 500px;
+    width: 100%;
     border: 1px solid #e0e0e0;
 }
 
@@ -280,6 +291,7 @@ form {
     border-radius: 4px;
     font-size: 0.95rem;
 }
+
 button {
     background-color: #003366;
     color: white;
@@ -296,65 +308,55 @@ button:hover {
 }
 
 .developer-profile {
-            margin-top: 25px;
-            margin-bottom: 30px;
-            display: flex;
-            flex-direction: row;
-            gap: 15px;
-        }
+    margin-top: 25px;
+    margin-bottom: 30px;
+    display: flex;
+    flex-direction: row;
+    gap: 15px;
+    flex-wrap: wrap;
+}
 
 .profile-image {
-            display: flex;
-            gap: 3px;
-            align-items: center;
-        }
+    display: flex;
+    gap: 3px;
+    align-items: center;
+}
 
 .linkdln-pic {
-            font-size: 2.5rem;
-            width: 60px;
-            transition: transform 0.3s ease, color 0.3s ease;
-        }
+    font-size: 2.5rem;
+    width: 60px;
+    transition: transform 0.3s ease, color 0.3s ease;
+}
+
 .linkdln-pic:hover {
-            transform: scale(1.1);
-            color: #005582;
-        }
+    transform: scale(1.1);
+    color: #005582;
+}
+
 .instagram-pic {
-            font-size: 2.5rem;
-            width: 100px;
-            transition: transform 0.3s ease, color 0.3s ease;
-        }
+    font-size: 2.5rem;
+    width: 100px;
+    transition: transform 0.3s ease, color 0.3s ease;
+}
+
 .instagram-pic:hover {
-            transform: scale(1.1);
-            color: #e1306c;
-        }
+    transform: scale(1.1);
+    color: #e1306c;
+}
+
 .whatsapp-contact {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 1.1rem;
-            font-weight: 500;
-            color: #333;
-        }
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: #333;
+}
+
 .fa-whatsapp {
-            color: #25d366;
-            font-size: 1.8rem;
-        }
-/* Map Image Styles (Halaman Map) */
-/* .map-container {
-            margin-top: 25px;
-            background: #ffffff;
-            padding: 10px;
-            border-radius: 10px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            width: 100%;
-        }
-.map-container iframe {
-            width: 100% !important;
-            height: 500px; 
-            border-radius: 6px;
-            border: 0;
-            display: block;
-        } */
+    color: #25d366;
+    font-size: 1.8rem;
+}
 
 /* Footer Styles */
 footer {
@@ -363,4 +365,76 @@ footer {
     text-align: center;
     padding: 15px;
     font-size: 0.9rem;
+}
+
+
+/* ========================================================= */
+/*   RESPONSIVE DESIGN (UNTUK LAYAR HP & TABLET)             */
+/* ========================================================= */
+
+@media (max-width: 768px) {
+    /* 1. Responsif Navbar */
+    .navbar {
+        flex-direction: column;
+        padding: 15px 20px;
+        gap: 12px;
+    }
+
+    .nav-menu {
+        gap: 15px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .logo-text {
+        font-size: 1rem;
+    }
+
+    /* 2. Penyesuaian Margin Atas Main */
+    main {
+        margin-top: 110px; /* Menambah ruang karena navbar bertumpuk secara vertikal */
+        padding: 20px 15px;
+    }
+
+    /* 3. Opening Section (Halaman Beranda) */
+    .opening-section {
+        padding: 25px 15px;
+        min-height: auto;
+    }
+
+    .opening-section h1 {
+        font-size: 1.6rem;
+    }
+
+    /* 4. Tampilan Kartu (Cards) Menyusun ke Bawah */
+    .cards-container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .card-box {
+        max-width: 100%;
+        width: 100%;
+    }
+
+    /* 5. Tabel Bisa Di-scroll Menyamping */
+    .fetch, form {
+        padding: 15px;
+    }
+
+    table, .data-table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap; /* Mencegah kolom terdistorsi */
+    }
+
+    /* 6. Profil Developer & Tombol */
+    .developer-profile {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .btn-aksi {
+        width: 100%; /* Tombol memenuhi lebar layar HP agar gampang diklik */
+    }
 }
