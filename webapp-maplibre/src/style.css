@@ -1,4 +1,8 @@
-/* Reset default styles */
+/* =========================================================
+   STYLE UTAMA WEBGIS HUNIAN KOTA SOLO
+   ========================================================= */
+
+/* Reset & Basic Setup */
 * {
     margin: 0;
     padding: 0;
@@ -6,435 +10,373 @@
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-body, html {
-    width: 100%;
-    height: 100%;
-    overflow-x: hidden; /* Mencegah scroll menyamping berlebih di HP */
+body {
+    background-color: #f8fafc;
+    color: #334155;
 }
 
-/* Navbar Styles */
+/* Navbar / Header */
 .navbar {
-    background-color: rgb(0, 51, 102);
+    background-color: #003366;
+    padding: 12px 30px;
     display: flex;
     justify-content: space-between;
-    align-items: center; 
-    padding: 15px 50px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    position: fixed;      
-    top: 0;               
-    left: 0;              
-    width: 100%;          
-    z-index: 1000;
+    align-items: center;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
-/* Logo Container Styles */
 .logo-container {
     display: flex;
     align-items: center;
-    gap: 10px; 
+    gap: 12px;
 }
 
-/* Logo Styles */
 .logo {
-    height: 40px; 
+    height: 40px;
     width: auto;
 }
 
-/* Logo Text Styles */
 .logo-text {
-    color: white;
-    font-weight: bold;
+    color: #ffffff;
+    font-weight: 700;
     font-size: 1.2rem;
-    letter-spacing: 1px;
+    letter-spacing: 0.5px;
 }
 
-/* Navigation Menu Styles */
 .nav-menu {
     display: flex;
-    gap: 30px; 
+    gap: 20px;
 }
 
-/* Navigation Item Styles */
 .nav-item {
-    color: white;
-    text-decoration: none; 
-    font-size: 1rem;
-    font-weight: 600;
-    transition: color 0.3s ease;
+    color: #cbd5e1;
+    text-decoration: none;
+    font-weight: 500;
+    padding: 6px 12px;
+    border-radius: 6px;
+    transition: all 0.3s ease;
 }
 
-/* Navigation Item Hover Styles */
-.nav-item:hover {
-    color: #ffcc00;
+.nav-item:hover,
+.nav-item.active {
+    color: #ffffff;
+    background-color: rgba(255, 255, 255, 0.15);
 }
 
-/* Main Content Wrapper */
-main {
-    margin-top: 70px;
-    padding: 40px 50px;
-    background-color: #f4f6f9;
-    min-height: calc(100vh - 120px);
+/* Hero Section (Spanduk Beranda) */
+.hero-banner {
+    background: linear-gradient(135deg, #003366 0%, #0055a5 100%);
+    color: #ffffff;
+    padding: 60px 20px;
+    border-radius: 12px;
+    text-align: center;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 15px rgba(0, 51, 102, 0.2);
 }
 
-/* Opening Section Styles (Khusus Beranda) */
-.opening-section {
-    padding: 50px;
-    width: 100%;
-    min-height: 40vh;  
-    text-align: left;
-    background-image: linear-gradient(rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.6)), url("https://perkinswill.com/wp-content/uploads/2019/06/BRT-Station-Exterior-1_10col.jpg");
-    background-size: cover;
-    background-position: center;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    border-radius: 10px;
-    margin-bottom: 20px;
-}
-
-.opening-section h1 {
-    color: #003366;
-    font-size: 2.5rem;
-    margin-bottom: 10px;
-}
-
-/* Cards Container Styles */
-.cards-container {
-    display: flex;        
-    justify-content: center; 
-    gap: 20px;             
-    padding: 20px 0;    
-    flex-wrap: wrap; /* Mencegah kartu memanjang ke samping */
-}
-
-/* Card Box Styles */
-.card-box {
-    flex: 1;               
-    min-width: 280px;      
-    max-width: 350px;      
-    background-color: #ffffff; 
-    padding: 25px;        
-    border-radius: 10px;   
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); 
-    border: 1px solid #e0e0e0; 
-    transition: transform 0.3s ease; 
-} 
-
-/* Card Box Hover Styles */
-.card-box:hover {
-    transform: translateY(-5px); 
-}
-
-/* Card Box Heading Styles */
-.card-box h3 {
-    color: #003366;        
-    margin-bottom: 10px;
-    font-size: 1.25rem;
-}
-
-/* Card Box Paragraph Styles */
-.card-box p {
-    color: #666666;
-    font-size: 0.95rem;
-    line-height: 1.5;
-}
-
-/* Halaman-halaman judul utama */
-main h1 {
-    color: #003366;
+.hero-banner h1 {
+    font-size: 2.2rem;
+    font-weight: 700;
     margin-bottom: 15px;
 }
 
-main h2 {
-    color: #003366;
-    margin-top: 30px;
-    margin-bottom: 15px;
+.hero-banner p {
+    font-size: 1.1rem;
+    max-width: 750px;
+    margin: 0 auto 25px auto;
+    opacity: 0.9;
+    line-height: 1.6;
 }
 
-/* Area Tugas JS & API */
-.task-js-container {
-    background: white;
-    padding: 25px;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-    border: 1px dashed #cbd5e1;
+/* Tombol CTA (Call to Action) */
+.btn-cta {
+    background-color: #ff9900;
+    color: #ffffff;
+    font-weight: bold;
+    padding: 12px 30px;
+    border-radius: 30px;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(255, 153, 0, 0.3);
 }
 
-.task-js-container h2 {
-    color: #002d62;
-    font-size: 20px;
-    margin-bottom: 15px;
-}
-
-.button-group {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 20px;
-    flex-wrap: wrap;
+.btn-cta:hover {
+    background-color: #e68a00;
+    color: #ffffff;
+    transform: translateY(-2px);
 }
 
 .btn-aksi {
-    padding: 10px 20px;
-    border: none;
-    background-color: #002d62;
-    color: white;
+    background-color: #003366;
+    color: #ffffff;
     font-weight: 600;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.2s;
+    padding: 10px 24px;
+    border-radius: 6px;
+    border: none;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.3s ease;
 }
 
 .btn-aksi:hover {
-    background-color: #001f44;
+    background-color: #002244;
+    color: #ffffff;
 }
 
-/* Fetch Section Styles */
-.fetch {
-    margin-top: 20px;
-    background: white;
+/* Section Title */
+.section-title {
+    text-align: center;
+    color: #003366;
+    font-weight: 700;
+    margin-bottom: 30px;
+}
+
+/* Feature Cards */
+.feature-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
     padding: 25px;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); 
-    border: 1px solid #e0e0e0;
-    overflow-x: auto; /* Mencegah tabel merusak layout HP */
+    text-align: center;
+    height: 100%;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-/* Styling Tabel Data */
-.data-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 15px;
-    font-family: sans-serif;
-    background-color: #ffffff;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
-    overflow: hidden;
+.feature-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
 }
 
-.data-table th {
-    background-color: #003366; 
-    color: white;
-    text-align: left;
-    padding: 12px 15px;
-    font-size: 14px;
-}
-
-.data-table td {
-    padding: 12px 15px;
-    border-bottom: 1px solid #dddddd;
-    color: #333333;
-    font-size: 14px;
-    vertical-align: middle;
-}
-
-/* Efek zebra striping */
-.data-table tbody tr:nth-of-type(even) {
-    background-color: #f8f9fa;
-}
-
-/* Efek hover saat mouse mengarah ke baris */
-.data-table tbody tr:hover {
-    background-color: #f1f4f9;
-}
-
-/* Table Styles (Halaman About) */
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 20px 0;
-    background: #fff;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-    border-radius: 8px;
-    overflow: hidden;
-}
-
-table, th, td {
-    border: 1px solid #dddddd;
-}
-
-th, td {
-    padding: 12px;
-    text-align: left;
-}
-
-th {
-    background-color: #003366;
-    color: white;
-}
-
-/* Form Styles (Halaman About) */
-form {
-    background: #fff;
-    padding: 25px;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    max-width: 500px;
-    width: 100%;
-    border: 1px solid #e0e0e0;
-}
-
-.form-group {
+.feature-icon {
+    font-size: 2.5rem;
     margin-bottom: 15px;
 }
 
-.form-group label {
-    display: block;
-    margin-bottom: 5px;
+.feature-card h3 {
+    color: #003366;
+    font-size: 1.2rem;
     font-weight: 600;
-    color: #333;
+    margin-bottom: 10px;
 }
 
-.form-group input, .form-group textarea {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 0.95rem;
+.feature-card p {
+    color: #64748b;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    margin: 0;
 }
 
-button {
-    background-color: #003366;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-weight: 600;
-    transition: background 0.3s;
-}
-
-button:hover {
-    background-color: #002244;
-}
-
-.developer-profile {
-    margin-top: 25px;
-    margin-bottom: 30px;
-    display: flex;
-    flex-direction: row;
-    gap: 15px;
-    flex-wrap: wrap;
-}
-
-.profile-image {
-    display: flex;
-    gap: 3px;
-    align-items: center;
-}
-
-.linkdln-pic {
-    font-size: 2.5rem;
-    width: 60px;
-    transition: transform 0.3s ease, color 0.3s ease;
-}
-
-.linkdln-pic:hover {
-    transform: scale(1.1);
-    color: #005582;
-}
-
-.instagram-pic {
-    font-size: 2.5rem;
-    width: 100px;
-    transition: transform 0.3s ease, color 0.3s ease;
-}
-
-.instagram-pic:hover {
-    transform: scale(1.1);
-    color: #e1306c;
-}
-
-.whatsapp-contact {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 1.1rem;
-    font-weight: 500;
-    color: #333;
-}
-
-.fa-whatsapp {
-    color: #25d366;
-    font-size: 1.8rem;
-}
-
-/* Footer Styles */
-footer {
-    background-color: rgb(0, 51, 102);
-    color: white;
+/* CTA Bottom Section */
+.cta-banner {
+    background-color: #ffffff;
+    border: 2px dashed #cbd5e1;
+    border-radius: 12px;
+    padding: 30px 20px;
     text-align: center;
-    padding: 15px;
+}
+
+.cta-banner h3 {
+    color: #003366;
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.cta-banner p {
+    color: #64748b;
+    font-size: 0.95rem;
+    margin-bottom: 15px;
+}
+
+/* Footer */
+.footer {
+    background-color: #003366;
+    color: #cbd5e1;
+    text-align: center;
+    padding: 20px;
+    margin-top: 40px;
     font-size: 0.9rem;
 }
 
+/* =========================================================
+   STYLE TAMBAHAN HALAMAN TENTANG (ABOUT.HTML)
+   ========================================================= */
 
-/* ========================================================= */
-/*   RESPONSIVE DESIGN (UNTUK LAYAR HP & TABLET)             */
-/* ========================================================= */
+.page-title {
+    color: #003366;
+    font-weight: 700;
+    font-size: 2rem;
+    margin-bottom: 10px;
+}
 
-@media (max-width: 768px) {
-    /* 1. Responsif Navbar */
-    .navbar {
-        flex-direction: column;
-        padding: 15px 20px;
-        gap: 12px;
-    }
+.lead-text {
+    color: #64748b;
+    font-size: 1.05rem;
+    line-height: 1.6;
+}
 
-    .nav-menu {
-        gap: 15px;
-        flex-wrap: wrap;
-        justify-content: center;
-    }
+.card-box {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+}
 
-    .logo-text {
-        font-size: 1rem;
-    }
+.section-subtitle {
+    color: #003366;
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+}
 
-    /* 2. Penyesuaian Margin Atas Main */
-    main {
-        margin-top: 110px; /* Menambah ruang karena navbar bertumpuk secara vertikal */
-        padding: 20px 15px;
-    }
+/* Custom Table */
+.custom-table standard {
+    border-color: #f1f5f9;
+}
 
-    /* 3. Opening Section (Halaman Beranda) */
-    .opening-section {
-        padding: 25px 15px;
-        min-height: auto;
-    }
+.custom-table th {
+    background-color: #f8fafc;
+    color: #003366;
+    font-weight: 600;
+}
 
-    .opening-section h1 {
-        font-size: 1.6rem;
-    }
+/* Profil Developer & Avatar */
+.dev-avatar {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid #003366;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
 
-    /* 4. Tampilan Kartu (Cards) Menyusun ke Bawah */
-    .cards-container {
-        flex-direction: column;
-        align-items: center;
-    }
+.dev-name {
+    color: #003366;
+    font-weight: 700;
+    margin-bottom: 2px;
+}
 
-    .card-box {
-        max-width: 100%;
-        width: 100%;
-    }
+.dev-role {
+    font-size: 0.9rem;
+}
 
-    /* 5. Tabel Bisa Di-scroll Menyamping */
-    .fetch, form {
-        padding: 15px;
-    }
+/* Social Media Icons */
+.social-links {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
 
-    table, .data-table {
-        display: block;
-        overflow-x: auto;
-        white-space: nowrap; /* Mencegah kolom terdistorsi */
-    }
+.social-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.2rem;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
 
-    /* 6. Profil Developer & Tombol */
-    .developer-profile {
-        flex-direction: column;
-        gap: 10px;
-    }
+.social-icon.linkedin {
+    background-color: #0a66c2;
+}
 
-    .btn-aksi {
-        width: 100%; /* Tombol memenuhi lebar layar HP agar gampang diklik */
-    }
+.social-icon.instagram {
+    background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+}
+
+.social-icon:hover {
+    transform: translateY(-3px);
+    opacity: 0.9;
+    color: white;
+}
+
+/* WhatsApp Box */
+.whatsapp-contact-box {
+    background-color: #f0fdf4;
+    border: 1px solid #bbf7d0;
+    border-radius: 10px;
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+}
+
+.wa-icon {
+    font-size: 1.8rem;
+    color: #22c55e;
+}
+
+/* Layout khusus halaman Peta agar Footer tetap kelihatan */
+body.map-page-body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* Memastikan body memenuhi layar */
+    margin: 0;
+}
+
+.map-main-content {
+    flex: 1; /* Mengisi sisa ruang antara header dan footer */
+    padding: 20px 30px;
+    max-width: 1200px;
+    width: 100%;
+    margin: 0 auto;
+    box-sizing: border-box;
+}
+
+.map-header-info h1 {
+    color: #003366;
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.map-header-info p {
+    color: #64748b;
+    font-size: 1rem;
+    margin-bottom: 20px;
+}
+
+/* Container Peta MapLibre */
+.map-wrapper {
+    width: 100%;
+    height: 480px; /* Disesuaikan agar pas dengan layar + footer */
+    border-radius: 10px;
+    border: 1px solid #cbd5e1;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+}
+
+/* Info Buffer */
+.buffer-info {
+    margin-top: 15px;
+    padding: 12px 15px;
+    background-color: #f1f5f9;
+    border: 1px dashed #94a3b8;
+    border-radius: 8px;
+    font-family: monospace;
+    font-size: 0.85rem;
+    color: #334155;
+}
+
+/* Footer Style */
+footer.main-footer {
+    background-color: #003366;
+    color: #ffffff;
+    text-align: center;
+    padding: 15px 20px;
+    margin-top: 30px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+footer.main-footer p {
+    margin: 0;
+    font-size: 0.85rem;
 }

@@ -4,86 +4,120 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <title>Tentang - Peta Digital Angkutan Pengumpan</title>
+    <title>Tentang Saya & Proyek - WebGIS Hunian Solo Raya</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="./src/style.css">
 </head>
 <body>
-    <!-- Navigation Bar -->
+
     <header class="navbar">
         <div class="logo-container">
             <img src="https://www.undip.ac.id/wp-content/uploads/2023/10/web-undip-logo.png" alt="Logo Undip" class="logo">
-            <span class="logo-text">UNDIP</span>
+            <span class="logo-text">UNDIP WebGIS</span>
         </div>
         <nav class="nav-menu">
             <a href="index.html" class="nav-item">Beranda</a>
-            <a href="about.html" class="nav-item">Tentang</a>
-            <a href="map.html" class="nav-item">Maps</a>
+            <a href="about.html" class="nav-item active">Tentang</a>
+            <a href="map.html" class="nav-item">Peta Hunian</a>
         </nav>
     </header>
 
-    <main>
-        <!-- About Section -->
-        <h1>Tentang Saya & Proyek</h1>
-        <p>Proyek WebGIS ini dikembangkan sebagai bagian dari tugas praktikum untuk memetakan sistem transportasi publik yang lebih inklusif di Jakarta.</p>
-        <!-- Riwayat Pendidikan -->
-        <h2>Riwayat Pendidikan</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>Jenjang Pendidikan</th>
-                    <th>Institusi / Universitas</th>
-                    <th>Tahun Pendidikan</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>S1 Perencanaan Wilayah & Kota</td>
-                    <td>Universitas Diponegoro (UNDIP)</td>
-                    <td>2021 - 2025</td>
-                </tr>
-                <tr>
-                    <td>SMA / SMK</td>
-                    <td>SMAN 20 BANDUNG</td>
-                    <td>2019 - 2022</td>
-                </tr>
-            </tbody>
-        </table>
-        <!-- Kontak Developer -->
-        <h2>Hubungi Developer</h2>
-        <form action="#" method="POST">
-            <div class="form-group">
-                <label for="nama">Nama Lengkap:</label>
-                <input type="text" id="nama" name="nama" required placeholder="Masukkan nama Anda">
-            </div>
-            <div class="form-group">
-                <label for="email">Alamat Email:</label>
-                <input type="email" id="email" name="email" required placeholder="nama@email.com">
-            </div>
-            <div class="form-group">
-                <label for="pesan">Pesan/Saran:</label>
-                <textarea id="pesan" name="pesan" rows="4" required placeholder="Tuliskan masukan untuk peta digital ini..."></textarea>
-            </div>
-            <button type="submit">Kirim Pesan</button>
-        </form>
-        <!-- Profil Developer -->
-        <section class="developer-profile">
-            <div class="profile-image">
-                <a href="https://www.linkedin.com/in/harizkyarfianto" target="_blank">
-                    <img src="https://tse4.mm.bing.net/th/id/OIP.WFcTQy9mjyyXo4avkoaydQHaHa?w=1250&h=1250&rs=1&pid=ImgDetMain&o=7&rm=3" alt="Foto login developer" class="linkdln-pic">
-                </a>
-                <a href="https://www.instagram.com/rizkyarfnt" target="_blank">
-                    <img src="https://1000logos.net/wp-content/uploads/2017/02/Instagram-Logo.png" alt="Foto login developer" class="instagram-pic">
-                </a>
-                </div>
+    <main class="container my-5">
+        <section class="about-section mb-5">
+            <h1 class="page-title">Tentang Saya & Proyek</h1>
+            <p class="lead-text">
+                Proyek WebGIS ini dikembangkan sebagai bagian dari pelatihan Bootcamp WebGIS MAPID x UNDIP. Aplikasi ini bertujuan untuk memetakan dan mengevaluasi tingkat aksesibilitas lokasi perumahan/hunian di kawasan Kota Surakarta (Solo) Raya menuju pusat kota serta fasilitas transportasi publik.
+            </p>
         </section>
-            <div class="whatsapp-contact">
-                <i class="fa-brands fa-whatsapp"></i>
-                <span>WhatsApp: +62 823-2962-5916</span>
+
+        <div class="row g-4">
+            <div class="col-lg-7">
+                <div class="card-box mb-4">
+                    <h2 class="section-subtitle"><i class="fa-solid fa-graduation-cap me-2"></i>Riwayat Pendidikan</h2>
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle custom-table">
+                            <thead>
+                                <tr>
+                                    <th>Jenjang</th>
+                                    <th>Institusi / Universitas</th>
+                                    <th>Tahun</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>S1 Perencanaan Wilayah & Kota</strong></td>
+                                    <td>Universitas Diponegoro (UNDIP)</td>
+                                    <td>2021 - 2025</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>SMA / SMK</strong></td>
+                                    <td>SMAN 20 BANDUNG</td>
+                                    <td>2019 - 2022</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="card-box">
+                    <h2 class="section-subtitle"><i class="fa-solid fa-envelope me-2"></i>Hubungi Developer</h2>
+                    <form action="#" method="POST" class="contact-form">
+                        <div class="mb-3">
+                            <label for="nama" class="form-label">Nama Lengkap:</label>
+                            <input type="text" id="nama" name="nama" class="form-control" required placeholder="Masukkan nama Anda">
+                        </div>
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Alamat Email:</label>
+                            <input type="email" id="email" name="email" class="form-control" required placeholder="nama@email.com">
+                        </div>
+                        <div class="mb-3">
+                            <label for="pesan" class="form-label">Pesan / Saran:</label>
+                            <textarea id="pesan" name="pesan" class="form-control" rows="4" required placeholder="Tuliskan masukan untuk proyek WebGIS ini..."></textarea>
+                        </div>
+                        <button type="submit" class="btn-aksi w-100">Kirim Pesan</button>
+                    </form>
+                </div>
             </div>
+
+            <div class="col-lg-5">
+                <div class="card-box text-center h-100">
+                    <h2 class="section-subtitle mb-4"><i class="fa-solid fa-user-gear me-2"></i>Profil Developer</h2>
+                    
+                    <div class="developer-profile">
+                        <div class="avatar-wrapper mb-3">
+                            <img src="https://tse4.mm.bing.net/th/id/OIP.WFcTQy9mjyyXo4avkoaydQHaHa?w=1250&h=1250&rs=1&pid=ImgDetMain&o=7&rm=3" alt="Foto Developer" class="dev-avatar">
+                        </div>
+                        <h4 class="dev-name">Harizky Arfianto</h4>
+                        <p class="dev-role text-muted">PWK Universitas Diponegoro</p>
+                        
+                        <div class="social-links my-4">
+                            <a href="https://www.linkedin.com/in/harizkyarfianto" target="_blank" class="social-icon linkedin" title="LinkedIn">
+                                <i class="fa-brands fa-linkedin-in"></i>
+                            </a>
+                            <a href="https://www.instagram.com/rizkyarfnt" target="_blank" class="social-icon instagram" title="Instagram">
+                                <i class="fa-brands fa-instagram"></i>
+                            </a>
+                        </div>
+
+                        <div class="whatsapp-contact-box">
+                            <i class="fa-brands fa-whatsapp wa-icon"></i>
+                            <div>
+                                <span class="d-block small text-muted">WhatsApp Kontak:</span>
+                                <strong>+62 823-2962-5916</strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </main>
-    <!-- Footer -->
-    <footer>
-        <p>&copy; 2026 Peta Digital Angkutan Pengumpan DKI Jakarta. Tugas Bootcamp WebGIS.</p>
+
+    <footer class="footer mt-auto">
+        <p>&copy; 2026 WebGIS Penilaian Hunian Kota Solo Raya. Tugas Bootcamp WebGIS MAPID x UNDIP.</p>
     </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

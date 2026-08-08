@@ -10,14 +10,14 @@ export function storeAreaGeometry(event) {
 
 export async function computeArea(wkt){
     const response = await fetch(`${API_BASE}/spatial_computation/area`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ geometry: wkt })
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ geometry: wkt })
     })
 
     const result = await response.json()
 
-    const output = document.getElementById("luas");
+        const output = document.getElementById("luas");
     output.textContent = `${result.area_ha.toLocaleString("ID-id")} ${result.unit}`
 
     return result
