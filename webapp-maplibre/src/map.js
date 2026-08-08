@@ -3,6 +3,7 @@ import 'maplibre-gl/dist/maplibre-gl.css';
 
 import toponimiData from './data/revisi_toponimi_surakarta.geojson?url';
 import admData from './data/adm_surakarta.geojson?url';
+import landuseData from './data/revisi_gunlah.geojson?url';
 import { addToponimiPopup } from './Popup/popup.js';
 
 const map = new Map({
@@ -14,7 +15,6 @@ const map = new Map({
 
 map.addControl(new NavigationControl(), "top-left");
 
-// NAMA KOLOM DI GEOJSON KAMU ADALAH 'JENIS'
 const NAMA_KOLOM = 'JENIS';
 
 map.on('load', () => {
@@ -23,8 +23,24 @@ map.on('load', () => {
         statusElem.className = 'badge bg-success p-2';
         statusElem.innerText = '✅ Peta Siap';
     }
+// ==========================================
+    // 1. LAYER PENGGUNAAN LAHAN (LANDUSE) - POLIGON
+    // ==========================================
+    map.addSource('landuse-source', { type: 'geojson', data: landuseData });
 
-    // 1. LAYER BATAS ADM
+    map.addLayer({
+        id: 'layer-landuse',
+        type: 'fill',
+        source: 'landuse-source',
+        paint: {
+            'fill-color': '#ff0000',      // Uji coba pakai warna MERAH TERANG dulu biar pasti kelihatan!
+            'fill-opacity': 0.7,          // Transparan 70%
+            'fill-outline-color': '#000000' // Garis hitam tebal
+        }
+    });
+    // ==========================================
+    // 2. LAYER BATAS ADMINISTRASI
+    // ==========================================
     map.addSource('adm-source', { type: 'geojson', data: admData });
 
     map.addLayer({
@@ -45,7 +61,9 @@ map.on('load', () => {
         }
     });
 
-    // 2. LAYER TOPONIMI FASILITAS
+    // ==========================================
+    // 3. LAYER TOPONIMI FASILITAS - TITIK/CIRCLE
+    // ==========================================
     map.addSource('toponimi-source', { type: 'geojson', data: toponimiData });
 
     map.addLayer({
@@ -56,7 +74,6 @@ map.on('load', () => {
             'circle-radius': 6,
             'circle-stroke-width': 1,
             'circle-stroke-color': '#ffffff',
-            // Pewarnaan berdasarkan kolom JENIS
             'circle-color': [
                 'match',
                 ['get', NAMA_KOLOM],
@@ -70,7 +87,7 @@ map.on('load', () => {
                 'Transportasi', '#5d4037',
                 'RTH', '#7cb342',
                 'Makam', '#546e7a',
-                '#0066cc' // Warna default jika ada jenis lain
+                '#0066cc'
             ]
         }
     });
@@ -78,12 +95,14 @@ map.on('load', () => {
     // Filter Awal Saat Peta Pertama Dibuka
     updateFasilitasFilter();
 
-    // Event Hover & Click
+    // Event Hover & Click Pop-up Fasilitas
     map.on('mouseenter', 'layer-fasilitas', () => { map.getCanvas().style.cursor = 'pointer'; });
     map.on('mouseleave', 'layer-fasilitas', () => { map.getCanvas().style.cursor = ''; });
     map.on('click', 'layer-fasilitas', (e) => { addToponimiPopup(map, e); });
 
-    // 3. LOGIKA FILTER CHECKBOX CATEGORY
+    // ==========================================
+    // 4. LOGIKA FILTER CHECKBOX & ADMINISTRASI
+    // ==========================================
     function updateFasilitasFilter() {
         const checkedBoxes = document.querySelectorAll('.check-kategori:checked');
         const selectedCategories = Array.from(checkedBoxes).map(cb => cb.value);
@@ -99,7 +118,7 @@ map.on('load', () => {
         cb.addEventListener('change', updateFasilitasFilter);
     });
 
-    // Filter Batas ADM
+    // Filter Batas ADM Toggle
     const checkAdm = document.getElementById('check-adm');
     if (checkAdm) {
         checkAdm.addEventListener('change', (e) => {
