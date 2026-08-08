@@ -1,80 +1,48 @@
-import { Map, AttributionControl, FullscreenControl, GlobeControl, LogoControl } from 'maplibre-gl';
+import { Map, NavigationControl } from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
-import { addKotaLayer, addAdmBanten } from './layers/vector.js';
-import { addFlagLayer } from './layers/raster.js';
-import flagImage from "./data/flag.png?url";
-import { addADMPopup, addKotaPopup } from './Popup/popup.js';
-import { storeAreaGeometry } from './engine/areaTools.js';
-import { storeBufferGeometry } from './engine/bufferTools.js';
 
-export class englandflagControl {
-    onAdd(map) {
-        this._map = map;
-        this._container = document.createElement('div');
-        this._container.className = 'maplibregl-ctrl';
-        this._container.innerHTML = `
-            <img
-                src="${flagImage}"
-                alt="Logo"
-                style="width: 70px"
-            >
-        `;
-        return this._container;
-    }
-    onRemove() {
-        this._container.remove();
-        this._map = undefined;
-    }
-}
+// Import data GeoJSON
+import toponimiData from './data/revisi_toponimi_surakarta.geojson?url';
+
+// IMPORT FUNGSI POPUP DARI FILE LAIN
+import { addToponimiPopup, addADMPopup } from './Popup/popup.js';
 
 const map = new Map({
-    container: 'map', 
-    style: 'https://demotiles.maplibre.org/style.json',
-    center: [110.20971606819703, -7.493319607970615], // Magelang / Jateng area
-    zoom: 7,
-    cooperativeGestures: true
+    container: 'map',
+    style: 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json',
+    center: [110.8250, -7.5680],
+    zoom: 13
 });
 
-map.addControl(new AttributionControl({
-    compact: true,
-    customAttribution: "Natural Earth Dataset, England"
-}));
-
-map.addControl(new FullscreenControl());
-map.addControl(new GlobeControl());
-map.addControl(new LogoControl({ compact: false }));
-map.addControl(new englandflagControl(), "top-left");
+map.addControl(new NavigationControl(), "top-left");
 
 map.on('load', () => {
-    // Tambahkan Layer
-    addKotaLayer(map);
-    addAdmBanten(map);
-    addFlagLayer(map);
-
-    map.doubleClickZoom.disable();
-
-    // Event Klik Area (Polygon ADM)
-    map.on("click", "area-layer", (event) => {
-        const areaData = storeAreaGeometry(event);
-        addADMPopup(map, event, areaData);
+    map.addSource('toponimi-source', {
+        type: 'geojson',
+        data: toponimiData
     });
 
-    // PERBAIKAN: Buffer dipindahkan ke event Klik Kota (Titik/Point)
-    map.on("click", "kota-layer", async (event) => {
-        // 1. Tampilkan Popup Kota
-        addKotaPopup(map, event);
-
-        // 2. Buat Buffer dari Titik Kota yang diklik
-        await storeBufferGeometry(map, event);
+    map.addLayer({
+        id: 'toponimi-layer',
+        type: 'circle',
+        source: 'toponimi-source',
+        paint: {
+            'circle-radius': 7,
+            'circle-color': '#e74c3c',
+            'circle-stroke-width': 1.5,
+            'circle-stroke-color': '#ffffff'
+        }
     });
 
-    // Ubah kursor jadi pointer saat hover di atas 'kota-layer'
-    map.on('mouseenter', 'kota-layer', () => {
+    map.on('mouseenter', 'toponimi-layer', () => {
         map.getCanvas().style.cursor = 'pointer';
     });
-
-    // Kembalikan kursor ke normal saat keluar dari 'kota-layer'
-    map.on('mouseleave', 'kota-layer', () => {
+    map.on('mouseleave', 'toponimi-layer', () => {
         map.getCanvas().style.cursor = '';
+    });
+
+    // PANGGIL FUNGSI POPUP-NYA DI SINI (SANGAT RINGKAS!)
+    map.on('click', 'toponimi-layer', (e) => {
+        addToponimiPopup(map, e);
     });
 });

@@ -3,42 +3,120 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <title>Maps - Peta Digital Angkutan Pengumpan</title>
+    <title>Peta Hunian - WebGIS Penilaian Hunian Kota Solo</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     
     <link href="https://unpkg.com/maplibre-gl@latest/dist/maplibre-gl.css" rel="stylesheet" />
     
     <link rel="stylesheet" href="./src/style.css">
+
+    <style>
+        /* CSS Tambahan khusus Halaman Peta */
+        .map-container-wrapper {
+            position: relative;
+            width: 100%;
+            height: calc(100vh - 160px);
+            min-height: 500px;
+        }
+
+        #map {
+            width: 100%;
+            height: 100%;
+            border-radius: 8px;
+        }
+
+        /* Side Panel / Floating Control di Peta */
+        .map-side-panel {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 320px;
+            max-height: calc(100% - 30px);
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(5px);
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            z-index: 10;
+            overflow-y: auto;
+            padding: 15px;
+        }
+
+        .map-legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.85rem;
+            margin-bottom: 5px;
+        }
+
+        .legend-color {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+    </style>
 </head>
 <body class="map-page-body">
 
-    <header class="navbar">
+    <header class="navbar" id="navbar-id">
         <div class="logo-container">
             <img src="https://www.undip.ac.id/wp-content/uploads/2023/10/web-undip-logo.png" alt="Logo Undip" class="logo">
             <span class="logo-text">UNDIP</span>
         </div>
         <nav class="nav-menu">
             <a href="index.html" class="nav-item">Beranda</a>
+            <a href="map.html" class="nav-item active">Peta Hunian</a>
             <a href="about.html" class="nav-item">Tentang</a>
-            <a href="map.html" class="nav-item active">Maps</a>
         </nav>
     </header>
 
-    <main class="map-main-content">
-        <div class="map-header-info">
-            <h1>Visualisasi Peta Rute Pengumpan</h1>
-            <p>Halaman ini menampilkan visualisasi spasial jaringan angkutan pengumpan DKI Jakarta menggunakan MapLibre GL JS.</p>
+    <main class="container-fluid my-3 px-4">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <div>
+                <h1 class="h4 fw-bold mb-0" style="color: #003366;">🗺️ Peta Interaktif Aksesibilitas Hunian Solo</h1>
+                <p class="text-muted small mb-0">Eksplorasi lokasi perumahan dan rincian skor aksesibilitasnya di Kawasan Solo Raya.</p>
+            </div>
+            <div id="map-status" class="badge bg-primary p-2">
+                ⏳ Memuat Peta...
+            </div>
         </div>
 
-        <div id="map" class="map-wrapper"></div>
-        
-        <div id="buffer" class="buffer-info">WKT / Informasi Spasial</div>
+        <div class="map-container-wrapper">
+            <div id="map"></div>
+
+            <div class="map-side-panel">
+                <h6 class="fw-bold border-bottom pb-2 mb-2" style="color: #003366;">🔍 Detail Perumahan</h6>
+                
+                <div id="detail-info" class="mb-3">
+                    <p class="text-muted small italic">Klik salah satu titik perumahan di peta untuk melihat informasi detail.</p>
+                </div>
+
+                <h6 class="fw-bold border-bottom pb-2 mb-2" style="color: #003366;">🎨 Legenda Legenda</h6>
+                <div class="map-legend-item">
+                    <span class="legend-color" style="background-color: #28a745;"></span>
+                    <span>Aksesibilitas Tinggi</span>
+                </div>
+                <div class="map-legend-item">
+                    <span class="legend-color" style="background-color: #ffc107;"></span>
+                    <span>Aksesibilitas Sedang</span>
+                </div>
+                <div class="map-legend-item">
+                    <span class="legend-color" style="background-color: #dc3545;"></span>
+                    <span>Aksesibilitas Rendah</span>
+                </div>
+            </div>
+        </div>
     </main>
 
-    <footer>
-        <p>&copy; 2026 Peta Digital Angkutan Pengumpan DKI Jakarta. Tugas Bootcamp WebGIS.</p>
+    <footer class="footer mt-auto">
+        <p>&copy; 2026 WebGIS Penilaian Hunian Kota Solo. Tugas Bootcamp WebGIS MAPID x UNDIP.</p>
     </footer>
 
+    <script src="https://unpkg.com/maplibre-gl@latest/dist/maplibre-gl.js"></script>
+    
     <script type="module" src="./src/map.js"></script>
+    <div id="map"></div>
 </body>
 </html>

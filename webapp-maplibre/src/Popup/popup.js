@@ -1,7 +1,37 @@
+// src/popup.js
 import { Popup } from "maplibre-gl";
-import { storeAreaGeometry } from "../engine/areaTools.js";
+import { storeAreaGeometry } from "../engine/areaTools.js"; // Jika ada
 
-// Popup untuk Layer Kota (Point)
+// 1. Popup khusus Toponimi / Ruko Surakarta
+export function addToponimiPopup(map, event) {
+  const coordinate = event.lngLat;
+  const properties = event.features[0]?.properties;
+
+  const nama = properties?.NAMA_OBJEK || properties?.NAMMAP || "Tanpa Nama";
+  const jenis = properties?.JENIS || properties?.FTYPE || "-";
+  const foto = properties?.FOTO1;
+
+  let popupContent = `
+    <div style="font-family: sans-serif; padding: 5px; max-width: 220px;">
+      <h4 style="margin: 0 0 5px 0; color: #333;">${nama}</h4>
+      <p style="margin: 0 0 8px 0; font-size: 12px; color: #666;"><b>Kategori:</b> ${jenis}</p>
+  `;
+
+  if (foto) {
+    popupContent += `
+      <img src="${foto}" alt="${nama}" style="width: 100%; height: 120px; object-fit: cover; border-radius: 4px;" />
+    `;
+  }
+
+  popupContent += `</div>`;
+
+  return new Popup()
+    .setLngLat(coordinate)
+    .setHTML(popupContent)
+    .addTo(map);
+}
+
+// 2. Popup untuk Layer Kota (Point)
 export function addKotaPopup(map, event) {
   const coordinate = event.lngLat;
   const properties = event.features[0]?.properties;
@@ -18,13 +48,12 @@ export function addKotaPopup(map, event) {
     .addTo(map);
 }
 
-// Popup untuk Layer Administrasi / Area (Polygon)
+// 3. Popup untuk Layer Administrasi / Area (Polygon)
 export function addADMPopup(map, event) {
   const coordinate = event.lngLat;
   const properties = event.features[0]?.properties;
   const namaWilayah = properties?.WADMKK || properties?.NAMOBJ || properties?.NAME || "Wilayah Administrasi";
 
-  // 1. Buat dan tampilkan Popup dengan KOORDINAT & tempat penampungan LUAS (<div id="luas">)
   const popup = new Popup()
     .setLngLat(coordinate)
     .setHTML(`
@@ -44,8 +73,9 @@ export function addADMPopup(map, event) {
     `)
     .addTo(map);
 
-  // 2. Panggil kalkulasi backend untuk mengisi <span id="luas"> di atas
-  storeAreaGeometry(event);
+  if (typeof storeAreaGeometry === 'function') {
+    storeAreaGeometry(event);
+  }
 
   return popup;
 }
