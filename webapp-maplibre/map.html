@@ -6,9 +6,7 @@
     <title>Peta Hunian - WebGIS Penilaian Hunian Kota Solo</title>
     
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    
     <link href="https://unpkg.com/maplibre-gl@latest/dist/maplibre-gl.css" rel="stylesheet" />
-    
     <link rel="stylesheet" href="./src/style.css">
 
     <style>
@@ -47,7 +45,7 @@
             align-items: center;
             gap: 10px;
             font-size: 0.85rem;
-            margin-bottom: 5px;
+            margin-bottom: 6px;
         }
 
         .legend-color {
@@ -55,6 +53,24 @@
             height: 14px;
             border-radius: 50%;
             display: inline-block;
+            flex-shrink: 0;
+        }
+
+        .legend-line {
+            width: 18px;
+            height: 3px;
+            display: inline-block;
+            flex-shrink: 0;
+        }
+
+        /* Style untuk Filter Checkbox */
+        .filter-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            margin-bottom: 8px;
+            cursor: pointer;
         }
     </style>
 </head>
@@ -76,7 +92,7 @@
         <div class="d-flex justify-content-between align-items-center mb-3">
             <div>
                 <h1 class="h4 fw-bold mb-0" style="color: #003366;">🗺️ Peta Interaktif Aksesibilitas Hunian Solo</h1>
-                <p class="text-muted small mb-0">Eksplorasi lokasi perumahan dan rincian skor aksesibilitasnya di Kawasan Solo Raya.</p>
+                <p class="text-muted small mb-0">Eksplorasi lokasi fasilitas, jaringan pendukung, dan wilayah Administrasi Kota Surakarta.</p>
             </div>
             <div id="map-status" class="badge bg-primary p-2">
                 ⏳ Memuat Peta...
@@ -86,27 +102,74 @@
         <div class="map-container-wrapper">
             <div id="map"></div>
 
-            <div class="map-side-panel">
-                <h6 class="fw-bold border-bottom pb-2 mb-2" style="color: #003366;">🔍 Detail Perumahan</h6>
-                
-                <div id="detail-info" class="mb-3">
-                    <p class="text-muted small italic">Klik salah satu titik perumahan di peta untuk melihat informasi detail.</p>
-                </div>
+           <div class="map-side-panel">
+    
+    <h6 class="fw-bold border-bottom pb-2 mb-2" style="color: #003366;">🗺️ Wilayah</h6>
+    <div class="mb-3">
+        <label class="filter-item">
+            <input type="checkbox" id="check-adm" checked class="form-check-input mt-0">
+            <span>Batas Administrasi Solo</span>
+        </label>
+    </div>
 
-                <h6 class="fw-bold border-bottom pb-2 mb-2" style="color: #003366;">🎨 Legenda Legenda</h6>
-                <div class="map-legend-item">
-                    <span class="legend-color" style="background-color: #28a745;"></span>
-                    <span>Aksesibilitas Tinggi</span>
-                </div>
-                <div class="map-legend-item">
-                    <span class="legend-color" style="background-color: #ffc107;"></span>
-                    <span>Aksesibilitas Sedang</span>
-                </div>
-                <div class="map-legend-item">
-                    <span class="legend-color" style="background-color: #dc3545;"></span>
-                    <span>Aksesibilitas Rendah</span>
-                </div>
-            </div>
+    <h6 class="fw-bold border-bottom pb-2 mb-2" style="color: #003366;">🏢 Filter Fasilitas Toponimi</h6>
+    <div class="mb-3">
+    <label class="filter-item">
+        <input type="checkbox" class="check-kategori form-check-input mt-0" value="Kesehatan" checked>
+        <span class="legend-color" style="background-color: #e53935;"></span>
+        <span>🏥 Kesehatan</span>
+    </label>
+    <label class="filter-item">
+        <input type="checkbox" class="check-kategori form-check-input mt-0" value="Pendidikan" checked>
+        <span class="legend-color" style="background-color: #1e88e5;"></span>
+        <span>🎓 Pendidikan</span>
+    </label>
+    <label class="filter-item">
+        <input type="checkbox" class="check-kategori form-check-input mt-0" value="Perdagangan dan Jasa" checked> <span class="legend-color" style="background-color: #fb8c00;"></span>
+        <span>🛍️ Perdagangan & Jasa</span>
+    </label>
+    <label class="filter-item">
+        <input type="checkbox" class="check-kategori form-check-input mt-0" value="Peribadatan" checked>
+        <span class="legend-color" style="background-color: #8e24aa;"></span>
+        <span>🕌 Peribadatan</span>
+    </label>
+    <label class="filter-item">
+        <input type="checkbox" class="check-kategori form-check-input mt-0" value="Olahraga" checked>
+        <span class="legend-color" style="background-color: #43a047;"></span>
+        <span>⚽ Olahraga</span>
+    </label>
+    <label class="filter-item">
+        <input type="checkbox" class="check-kategori form-check-input mt-0" value="Pariwisata" checked>
+        <span class="legend-color" style="background-color: #00acc1;"></span>
+        <span>🏖️ Pariwisata</span>
+    </label>
+    <label class="filter-item">
+        <input type="checkbox" class="check-kategori form-check-input mt-0" value="Keamanan" checked>
+        <span class="legend-color" style="background-color: #3949ab;"></span>
+        <span>🛡️ Keamanan</span>
+    </label>
+    <label class="filter-item">
+        <input type="checkbox" class="check-kategori form-check-input mt-0" value="Transportasi" checked>
+        <span class="legend-color" style="background-color: #5d4037;"></span>
+        <span>🚌 Transportasi</span>
+    </label>
+    <label class="filter-item">
+        <input type="checkbox" class="check-kategori form-check-input mt-0" value="RTH" checked>
+        <span class="legend-color" style="background-color: #7cb342;"></span>
+        <span>🌳 RTH</span>
+    </label>
+    <label class="filter-item">
+        <input type="checkbox" class="check-kategori form-check-input mt-0" value="Makam" checked>
+        <span class="legend-color" style="background-color: #546e7a;"></span>
+        <span>🪦 Makam</span>
+    </label>
+</div>
+
+    <h6 class="fw-bold border-bottom pb-2 mb-2" style="color: #003366;">🔍 Detail Informasi</h6>
+    <div id="detail-info" class="mb-3">
+        <p class="text-muted small italic">Klik salah satu titik fasilitas di peta untuk melihat detailnya.</p>
+    </div>
+</div>
         </div>
     </main>
 
@@ -115,8 +178,6 @@
     </footer>
 
     <script src="https://unpkg.com/maplibre-gl@latest/dist/maplibre-gl.js"></script>
-    
     <script type="module" src="./src/map.js"></script>
-    <div id="map"></div>
 </body>
 </html>
