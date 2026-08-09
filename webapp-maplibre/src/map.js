@@ -23,23 +23,37 @@ map.on('load', () => {
         statusElem.className = 'badge bg-success p-2';
         statusElem.innerText = '✅ Peta Siap';
     }
-// ==========================================
-    // 1. LAYER PENGGUNAAN LAHAN (LANDUSE) - POLIGON
+
+    // ==========================================
+    // 1. LAYER PENGGUNAAN LAHAN (LANDUSE) - Awalnya Disembunyikan
     // ==========================================
     map.addSource('landuse-source', { type: 'geojson', data: landuseData });
+    const NAMA_KOLOM_LANDUSE = 'PENGGUNAAN';
 
     map.addLayer({
         id: 'layer-landuse',
         type: 'fill',
         source: 'landuse-source',
+        layout: { 'visibility': 'none' }, // Default mati
         paint: {
-            'fill-color': '#ff0000',      // Uji coba pakai warna MERAH TERANG dulu biar pasti kelihatan!
-            'fill-opacity': 0.7,          // Transparan 70%
-            'fill-outline-color': '#000000' // Garis hitam tebal
+            'fill-color': [
+                'match',
+                ['get', NAMA_KOLOM_LANDUSE],
+                'Pertahanan dan Keamanan', '#3949ab',
+                'Permukiman', '#f39c12',
+                'Sawah', '#2ecc71',
+                'Perdagangan dan Jasa', '#e74c3c',
+                'RTH', '#27ae60',
+                'Industri', '#8e44ad',
+                '#95a5a6'
+            ],
+            'fill-opacity': 0.65,
+            'fill-outline-color': '#ffffff'
         }
     });
+
     // ==========================================
-    // 2. LAYER BATAS ADMINISTRASI
+    // 2. LAYER BATAS ADMINISTRASI - Awalnya Aktif
     // ==========================================
     map.addSource('adm-source', { type: 'geojson', data: admData });
 
@@ -47,6 +61,7 @@ map.on('load', () => {
         id: 'layer-adm-fill',
         type: 'fill',
         source: 'adm-source',
+        layout: { 'visibility': 'visible' },
         paint: { 'fill-color': '#ff9800', 'fill-opacity': 0.08 }
     });
 
@@ -54,6 +69,7 @@ map.on('load', () => {
         id: 'layer-adm-line',
         type: 'line',
         source: 'adm-source',
+        layout: { 'visibility': 'visible' },
         paint: {
             'line-color': '#e65100',
             'line-width': 2,
@@ -62,7 +78,7 @@ map.on('load', () => {
     });
 
     // ==========================================
-    // 3. LAYER TOPONIMI FASILITAS - TITIK/CIRCLE
+    // 3. LAYER TOPONIMI FASILITAS - Awalnya Disembunyikan
     // ==========================================
     map.addSource('toponimi-source', { type: 'geojson', data: toponimiData });
 
@@ -70,6 +86,7 @@ map.on('load', () => {
         id: 'layer-fasilitas',
         type: 'circle',
         source: 'toponimi-source',
+        layout: { 'visibility': 'none' }, // Default mati
         paint: {
             'circle-radius': 6,
             'circle-stroke-width': 1,
@@ -92,17 +109,51 @@ map.on('load', () => {
         }
     });
 
-    // Filter Awal Saat Peta Pertama Dibuka
-    updateFasilitasFilter();
-
     // Event Hover & Click Pop-up Fasilitas
     map.on('mouseenter', 'layer-fasilitas', () => { map.getCanvas().style.cursor = 'pointer'; });
     map.on('mouseleave', 'layer-fasilitas', () => { map.getCanvas().style.cursor = ''; });
     map.on('click', 'layer-fasilitas', (e) => { addToponimiPopup(map, e); });
 
     // ==========================================
-    // 4. LOGIKA FILTER CHECKBOX & ADMINISTRASI
+    // 4. LOGIKA INTERAKSI CHECKBOX & SUB-GRUP
     // ==========================================
+
+    // A. Toggle Batas Administrasi
+    const checkAdm = document.getElementById('check-adm');
+    if (checkAdm) {
+        checkAdm.addEventListener('change', (e) => {
+            const vis = e.target.checked ? 'visible' : 'none';
+            map.setLayoutProperty('layer-adm-fill', 'visibility', vis);
+            map.setLayoutProperty('layer-adm-line', 'visibility', vis);
+        });
+    }
+
+    // B. Toggle Penggunaan Lahan
+    const checkLanduse = document.getElementById('check-landuse');
+    if (checkLanduse) {
+        checkLanduse.addEventListener('change', (e) => {
+            const vis = e.target.checked ? 'visible' : 'none';
+            map.setLayoutProperty('layer-landuse', 'visibility', vis);
+        });
+    }
+
+    // C. Toggle Parent Toponimi & Munculkan Sub-Grup
+    const checkToponimiParent = document.getElementById('check-toponimi-parent');
+    const subToponimiContainer = document.getElementById('sub-toponimi');
+
+    if (checkToponimiParent) {
+        checkToponimiParent.addEventListener('change', (e) => {
+            if (e.target.checked) {
+                subToponimiContainer.style.display = 'block'; // Munculkan sub-kategori
+                map.setLayoutProperty('layer-fasilitas', 'visibility', 'visible');
+                updateFasilitasFilter();
+            } else {
+                subToponimiContainer.style.display = 'none'; // Sembunyikan sub-kategori
+                map.setLayoutProperty('layer-fasilitas', 'visibility', 'none');
+            }
+        });
+    }
+
     function updateFasilitasFilter() {
         const checkedBoxes = document.querySelectorAll('.check-kategori:checked');
         const selectedCategories = Array.from(checkedBoxes).map(cb => cb.value);
@@ -117,14 +168,4 @@ map.on('load', () => {
     document.querySelectorAll('.check-kategori').forEach(cb => {
         cb.addEventListener('change', updateFasilitasFilter);
     });
-
-    // Filter Batas ADM Toggle
-    const checkAdm = document.getElementById('check-adm');
-    if (checkAdm) {
-        checkAdm.addEventListener('change', (e) => {
-            const vis = e.target.checked ? 'visible' : 'none';
-            map.setLayoutProperty('layer-adm-fill', 'visibility', vis);
-            map.setLayoutProperty('layer-adm-line', 'visibility', vis);
-        });
-    }
 });

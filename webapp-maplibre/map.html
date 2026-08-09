@@ -10,7 +10,6 @@
     <link rel="stylesheet" href="./src/style.css">
 
     <style>
-        /* CSS Tambahan khusus Halaman Peta */
         .map-container-wrapper {
             position: relative;
             width: 100%;
@@ -24,12 +23,11 @@
             border-radius: 8px;
         }
 
-        /* Side Panel / Floating Control di Peta */
         .map-side-panel {
             position: absolute;
             top: 15px;
             right: 15px;
-            width: 320px;
+            width: 330px;
             max-height: calc(100% - 30px);
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(5px);
@@ -40,14 +38,6 @@
             padding: 15px;
         }
 
-        .map-legend-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 0.85rem;
-            margin-bottom: 6px;
-        }
-
         .legend-color {
             width: 14px;
             height: 14px;
@@ -56,14 +46,6 @@
             flex-shrink: 0;
         }
 
-        .legend-line {
-            width: 18px;
-            height: 3px;
-            display: inline-block;
-            flex-shrink: 0;
-        }
-
-        /* Style untuk Filter Checkbox */
         .filter-item {
             display: flex;
             align-items: center;
@@ -71,6 +53,14 @@
             font-size: 0.85rem;
             margin-bottom: 8px;
             cursor: pointer;
+        }
+
+        .sub-group-container {
+            padding-left: 20px;
+            border-left: 2px solid #e9ecef;
+            margin-top: 8px;
+            margin-bottom: 10px;
+            display: none; /* Awalnya tersembunyi */
         }
     </style>
 </head>
@@ -102,74 +92,92 @@
         <div class="map-container-wrapper">
             <div id="map"></div>
 
-           <div class="map-side-panel">
-    
-    <h6 class="fw-bold border-bottom pb-2 mb-2" style="color: #003366;">🗺️ Wilayah</h6>
-    <div class="mb-3">
-        <label class="filter-item">
-            <input type="checkbox" id="check-adm" checked class="form-check-input mt-0">
-            <span>Batas Administrasi Solo</span>
-        </label>
-    </div>
+            <div class="map-side-panel">
+                <h6 class="fw-bold border-bottom pb-2 mb-3" style="color: #003366;">🗂️ Pengaturan Layer Peta</h6>
 
-    <h6 class="fw-bold border-bottom pb-2 mb-2" style="color: #003366;">🏢 Filter Fasilitas Toponimi</h6>
-    <div class="mb-3">
-    <label class="filter-item">
-        <input type="checkbox" class="check-kategori form-check-input mt-0" value="Kesehatan" checked>
-        <span class="legend-color" style="background-color: #e53935;"></span>
-        <span>🏥 Kesehatan</span>
-    </label>
-    <label class="filter-item">
-        <input type="checkbox" class="check-kategori form-check-input mt-0" value="Pendidikan" checked>
-        <span class="legend-color" style="background-color: #1e88e5;"></span>
-        <span>🎓 Pendidikan</span>
-    </label>
-    <label class="filter-item">
-        <input type="checkbox" class="check-kategori form-check-input mt-0" value="Perdagangan dan Jasa" checked> <span class="legend-color" style="background-color: #fb8c00;"></span>
-        <span>🛍️ Perdagangan & Jasa</span>
-    </label>
-    <label class="filter-item">
-        <input type="checkbox" class="check-kategori form-check-input mt-0" value="Peribadatan" checked>
-        <span class="legend-color" style="background-color: #8e24aa;"></span>
-        <span>🕌 Peribadatan</span>
-    </label>
-    <label class="filter-item">
-        <input type="checkbox" class="check-kategori form-check-input mt-0" value="Olahraga" checked>
-        <span class="legend-color" style="background-color: #43a047;"></span>
-        <span>⚽ Olahraga</span>
-    </label>
-    <label class="filter-item">
-        <input type="checkbox" class="check-kategori form-check-input mt-0" value="Pariwisata dan Hiburan" checked>
-        <span class="legend-color" style="background-color: #00acc1;"></span>
-        <span>🏖️ Pariwisata dan Hiburan</span>
-    </label>
-    <label class="filter-item">
-        <input type="checkbox" class="check-kategori form-check-input mt-0" value="Pertahanan dan Keamanan" checked>
-        <span class="legend-color" style="background-color: #3949ab;"></span>
-        <span>🛡️ Pertahanan dan Keamanan</span>
-    </label>
-    <label class="filter-item">
-        <input type="checkbox" class="check-kategori form-check-input mt-0" value="Transportasi" checked>
-        <span class="legend-color" style="background-color: #5d4037;"></span>
-        <span>🚌 Transportasi</span>
-    </label>
-    <label class="filter-item">
-        <input type="checkbox" class="check-kategori form-check-input mt-0" value="RTH" checked>
-        <span class="legend-color" style="background-color: #7cb342;"></span>
-        <span>🌳 RTH</span>
-    </label>
-    <label class="filter-item">
-        <input type="checkbox" class="check-kategori form-check-input mt-0" value="Makam" checked>
-        <span class="legend-color" style="background-color: #546e7a;"></span>
-        <span>🪦 Makam</span>
-    </label>
-</div>
+                <!-- 1. Menu Batas Administrasi -->
+                <div class="mb-3">
+                    <label class="filter-item fw-bold text-dark mb-1">
+                        <input type="checkbox" id="check-adm" checked class="form-check-input mt-0">
+                        <span>🗺️ Batas Administrasi Solo</span>
+                    </label>
+                </div>
 
-    <h6 class="fw-bold border-bottom pb-2 mb-2" style="color: #003366;">🔍 Detail Informasi</h6>
-    <div id="detail-info" class="mb-3">
-        <p class="text-muted small italic">Klik salah satu titik fasilitas di peta untuk melihat detailnya.</p>
-    </div>
-</div>
+                <!-- 2. Menu Penggunaan Lahan -->
+                <div class="mb-3">
+                    <label class="filter-item fw-bold text-dark mb-1">
+                        <input type="checkbox" id="check-landuse" class="form-check-input mt-0">
+                        <span>🌱 Penggunaan Lahan</span>
+                    </label>
+                </div>
+
+                <!-- 3. Menu Toponimi (Fasilitas) dengan Sub-Grup -->
+                <div class="mb-3">
+                    <label class="filter-item fw-bold text-dark mb-1">
+                        <input type="checkbox" id="check-toponimi-parent" class="form-check-input mt-0">
+                        <span>🏢 Filter Fasilitas Toponimi</span>
+                    </label>
+                    
+                    <!-- Sub-grup kategori fasilitas -->
+                    <div id="sub-toponimi" class="sub-group-container">
+                        <label class="filter-item">
+                            <input type="checkbox" class="check-kategori form-check-input mt-0" value="Kesehatan" checked>
+                            <span class="legend-color" style="background-color: #e53935;"></span>
+                            <span>🏥 Kesehatan</span>
+                        </label>
+                        <label class="filter-item">
+                            <input type="checkbox" class="check-kategori form-check-input mt-0" value="Pendidikan" checked>
+                            <span class="legend-color" style="background-color: #1e88e5;"></span>
+                            <span>🎓 Pendidikan</span>
+                        </label>
+                        <label class="filter-item">
+                            <input type="checkbox" class="check-kategori form-check-input mt-0" value="Perdagangan dan Jasa" checked> 
+                            <span class="legend-color" style="background-color: #fb8c00;"></span>
+                            <span>🛍️ Perdagangan & Jasa</span>
+                        </label>
+                        <label class="filter-item">
+                            <input type="checkbox" class="check-kategori form-check-input mt-0" value="Peribadatan" checked>
+                            <span class="legend-color" style="background-color: #8e24aa;"></span>
+                            <span>🕌 Peribadatan</span>
+                        </label>
+                        <label class="filter-item">
+                            <input type="checkbox" class="check-kategori form-check-input mt-0" value="Olahraga" checked>
+                            <span class="legend-color" style="background-color: #43a047;"></span>
+                            <span>⚽ Olahraga</span>
+                        </label>
+                        <label class="filter-item">
+                            <input type="checkbox" class="check-kategori form-check-input mt-0" value="Pariwisata dan Hiburan" checked>
+                            <span class="legend-color" style="background-color: #00acc1;"></span>
+                            <span>🏖️ Pariwisata</span>
+                        </label>
+                        <label class="filter-item">
+                            <input type="checkbox" class="check-kategori form-check-input mt-0" value="Pertahanan dan Keamanan" checked>
+                            <span class="legend-color" style="background-color: #3949ab;"></span>
+                            <span>🛡️ Keamanan</span>
+                        </label>
+                        <label class="filter-item">
+                            <input type="checkbox" class="check-kategori form-check-input mt-0" value="Transportasi" checked>
+                            <span class="legend-color" style="background-color: #5d4037;"></span>
+                            <span>🚌 Transportasi</span>
+                        </label>
+                        <label class="filter-item">
+                            <input type="checkbox" class="check-kategori form-check-input mt-0" value="RTH" checked>
+                            <span class="legend-color" style="background-color: #7cb342;"></span>
+                            <span>🌳 RTH</span>
+                        </label>
+                        <label class="filter-item">
+                            <input type="checkbox" class="check-kategori form-check-input mt-0" value="Makam" checked>
+                            <span class="legend-color" style="background-color: #546e7a;"></span>
+                            <span>🪦 Makam</span>
+                        </label>
+                    </div>
+                </div>
+
+                <h6 class="fw-bold border-top pt-3 pb-2 mb-2" style="color: #003366;">🔍 Detail Informasi</h6>
+                <div id="detail-info" class="mb-3">
+                    <p class="text-muted small italic">Klik salah satu titik fasilitas di peta untuk melihat detailnya.</p>
+                </div>
+            </div>
         </div>
     </main>
 
