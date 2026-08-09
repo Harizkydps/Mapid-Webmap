@@ -1,4 +1,4 @@
-import { Map, NavigationControl } from 'maplibre-gl';
+import { Map, NavigationControl, Popup } from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 
 import toponimiData from './data/revisi_toponimi_surakarta.geojson?url';
@@ -16,6 +16,7 @@ const map = new Map({
 map.addControl(new NavigationControl(), "top-left");
 
 const NAMA_KOLOM = 'JENIS';
+const NAMA_KOLOM_LANDUSE = 'PENGGUNAAN';
 
 map.on('load', () => {
     const statusElem = document.getElementById('map-status');
@@ -25,16 +26,15 @@ map.on('load', () => {
     }
 
     // ==========================================
-    // 1. LAYER PENGGUNAAN LAHAN (LANDUSE) - Awalnya Disembunyikan
+    // 1. LAYER PENGGUNAAN LAHAN - Awalnya Mati
     // ==========================================
     map.addSource('landuse-source', { type: 'geojson', data: landuseData });
-    const NAMA_KOLOM_LANDUSE = 'PENGGUNAAN';
 
     map.addLayer({
         id: 'layer-landuse',
         type: 'fill',
         source: 'landuse-source',
-        layout: { 'visibility': 'none' }, // Default mati
+        layout: { 'visibility': 'none' },
         paint: {
             'fill-color': [
                 'match',
@@ -52,8 +52,21 @@ map.on('load', () => {
         }
     });
 
+    // Event Hover & Click Pop-up Penggunaan Lahan
+    map.on('mouseenter', 'layer-landuse', () => { map.getCanvas().style.cursor = 'pointer'; });
+    map.on('mouseleave', 'layer-landuse', () => { map.getCanvas().style.cursor = ''; });
+    map.on('click', 'layer-landuse', (e) => {
+        const props = e.features[0].properties;
+        const jenisLahan = props[NAMA_KOLOM_LANDUSE] || 'Tidak diketahui';
+        
+        new Popup()
+            .setLngLat(e.lngLat)
+            .setHTML(`<div style="font-size: 0.85rem;"><strong>Penggunaan Lahan:</strong><br>${jenisLahan}</div>`)
+            .addTo(map);
+    });
+
     // ==========================================
-    // 2. LAYER BATAS ADMINISTRASI - Awalnya Aktif
+    // 2. LAYER BATAS ADMINISTRASI - Awalnya Hidup
     // ==========================================
     map.addSource('adm-source', { type: 'geojson', data: admData });
 
@@ -78,7 +91,7 @@ map.on('load', () => {
     });
 
     // ==========================================
-    // 3. LAYER TOPONIMI FASILITAS - Awalnya Disembunyikan
+    // 3. LAYER TOPONIMI FASILITAS - Awalnya Mati
     // ==========================================
     map.addSource('toponimi-source', { type: 'geojson', data: toponimiData });
 
@@ -86,7 +99,7 @@ map.on('load', () => {
         id: 'layer-fasilitas',
         type: 'circle',
         source: 'toponimi-source',
-        layout: { 'visibility': 'none' }, // Default mati
+        layout: { 'visibility': 'none' },
         paint: {
             'circle-radius': 6,
             'circle-stroke-width': 1,
@@ -128,27 +141,50 @@ map.on('load', () => {
         });
     }
 
-    // B. Toggle Penggunaan Lahan
-    const checkLanduse = document.getElementById('check-landuse');
-    if (checkLanduse) {
-        checkLanduse.addEventListener('change', (e) => {
-            const vis = e.target.checked ? 'visible' : 'none';
-            map.setLayoutProperty('layer-landuse', 'visibility', vis);
+    // B. Toggle Parent Penggunaan Lahan & Sub-grupnya
+    const checkLanduseParent = document.getElementById('check-landuse-parent');
+    const subLanduseContainer = document.getElementById('sub-landuse');
+
+    if (checkLanduseParent) {
+        checkLanduseParent.addEventListener('change', (e) => {
+            if (e.target.checked) {
+                subLanduseContainer.style.display = 'block';
+                map.setLayoutProperty('layer-landuse', 'visibility', 'visible');
+                updateLanduseFilter();
+            } else {
+                subLanduseContainer.style.display = 'none';
+                map.setLayoutProperty('layer-landuse', 'visibility', 'none');
+            }
         });
     }
 
-    // C. Toggle Parent Toponimi & Munculkan Sub-Grup
+    function updateLanduseFilter() {
+        const checkedBoxes = document.querySelectorAll('.check-landuse-kategori:checked');
+        const selectedCategories = Array.from(checkedBoxes).map(cb => cb.value);
+
+        if (selectedCategories.length === 0) {
+            map.setFilter('layer-landuse', ['==', ['get', NAMA_KOLOM_LANDUSE], 'NONE']);
+        } else {
+            map.setFilter('layer-landuse', ['in', ['get', NAMA_KOLOM_LANDUSE], ['literal', selectedCategories]]);
+        }
+    }
+
+    document.querySelectorAll('.check-landuse-kategori').forEach(cb => {
+        cb.addEventListener('change', updateLanduseFilter);
+    });
+
+    // C. Toggle Parent Toponimi & Sub-grupnya
     const checkToponimiParent = document.getElementById('check-toponimi-parent');
     const subToponimiContainer = document.getElementById('sub-toponimi');
 
     if (checkToponimiParent) {
         checkToponimiParent.addEventListener('change', (e) => {
             if (e.target.checked) {
-                subToponimiContainer.style.display = 'block'; // Munculkan sub-kategori
+                subToponimiContainer.style.display = 'block';
                 map.setLayoutProperty('layer-fasilitas', 'visibility', 'visible');
                 updateFasilitasFilter();
             } else {
-                subToponimiContainer.style.display = 'none'; // Sembunyikan sub-kategori
+                subToponimiContainer.style.display = 'none';
                 map.setLayoutProperty('layer-fasilitas', 'visibility', 'none');
             }
         });
