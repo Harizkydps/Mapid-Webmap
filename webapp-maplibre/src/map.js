@@ -244,3 +244,4 @@ map.on('load', () => {
         cb.addEventListener('change', updateFasilitasFilter);
     });
 });
+
