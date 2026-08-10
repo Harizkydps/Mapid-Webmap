@@ -52,25 +52,51 @@ map.on('load', async () => {
     // 1. LAYER PENGGUNAAN LAHAN 
     // ==========================================
     map.addSource('landuse-source', { type: 'geojson', data: landuseData });
-    map.addLayer({
-        id: 'layer-landuse',
-        type: 'fill',
-        source: 'landuse-source',
-        layout: { 'visibility': 'none' },
-        paint: {
-            'fill-color': [
-                'match',
-                ['get', NAMA_KOLOM_LANDUSE],
-                'Permukiman', '#f39c12',
-                'Perdagangan dan Jasa', '#2ecc71',
-                'Industri', '#9b59b6',
-                'Sawah', '#00ced1',
-                '#95a5a6'
-            ],
-            'fill-opacity': 0.65,
-            'fill-outline-color': '#ffffff'
-        }
-    });
+   map.addLayer({
+    id: 'layer-landuse',
+    type: 'fill',
+    source: 'landuse-source',
+    layout: { 'visibility': 'none' },
+    paint: {
+        'fill-color': [
+            'match',
+            ['get', NAMA_KOLOM_LANDUSE],
+            'Danau', '#3366cc',
+            'Industri', '#9b59b6',
+            'Jalan', '#00bcd4',
+            'Jalur Hijau', '#b5b838',
+            'Kolam', '#ff69b4',
+            'Lapangan Olahraga', '#9acd32',
+            'Makam', '#9370db',
+            'Median Jalan', '#40e0d0',
+            'Pariwisata dan Hiburan', '#ff1493',
+            'Perdagangan dan Jasa', '#2ecc71',
+            'Pergudangan', '#bdb76b',
+            'Perkantoran', '#4169e1',
+            'Permukaan/Lapangan Diperkeras', '#7b68ee',
+            'Permukiman', '#f39c12',
+            'Pertahanan dan Keamanan', '#a0522d',
+            'Rel', '#6495ed',
+            'Sarana Kesehatan', '#daa520',
+            'Sarana Olahraga', '#ff69b4',
+            'Sarana Pendidikan', '#228b22',
+            'Sarana Peribadatan', '#3cb371',
+            'Sarana Sosial', '#ff4500',
+            'Sarana Transportasi', '#483d8b',
+            'Sarana Utilitas', '#000080',
+            'Sawah', '#00ced1',
+            'Semak Belukar', '#da70d6',
+            'Sungai', '#ba55d3',
+            'Taman', '#32cd32',
+            'Tanah Kosong', '#d2691e',
+            'Tanaman Campuran', '#b22222',
+            'Tegalan/Ladang', '#7fff00',
+            '#95a5a6' // Warna default untuk all other values
+        ],
+        'fill-opacity': 0.65,
+        'fill-outline-color': '#ffffff'
+    }
+});
 
     // ==========================================
     // 2. LAYER BATAS ADMINISTRASI 
@@ -121,7 +147,7 @@ map.on('load', async () => {
     });
 
     // ==========================================
-    // 4. TOMBOL KONTROL & ANALISIS TURF.JS
+    // 4. TOMBOL KONTROL & ANALISIS TURF.JS (DENGAN VALIDASI ZONASI)
     // ==========================================
     const btnTogglePenilaian = document.getElementById('btn-toggle-penilaian');
     if (btnTogglePenilaian) {
@@ -151,18 +177,43 @@ map.on('load', async () => {
         const clickedLngLat = [e.lngLat.lng, e.lngLat.lat];
         const userPoint = turf.point(clickedLngLat);
 
-        if (currentMarker) currentMarker.remove();
-        currentMarker = new Marker({ color: '#003366' })
-            .setLngLat(clickedLngLat)
-            .addTo(map);
-
-        // A. Cek Berada di Penggunaan Lahan Mana
+        // A. Cek Berada di Penggunaan Lahan Mana & Validasi Zona Terlarang
         let infoLahan = "Lahan Lainnya";
+        let isTerlarang = false;
+        
+        // Daftar penggunaan lahan yang TIDAK VALID/TERLARANG untuk hunian
+        const areaTerlarang = ["Danau", "Sungai", "Makam", "Industri", "Pergudangan"];
+
         if (loadedLanduse && loadedLanduse.features) {
             const matchedFeature = loadedLanduse.features.find(f => turf.booleanPointInPolygon(userPoint, f));
             if (matchedFeature && matchedFeature.properties) {
                 infoLahan = matchedFeature.properties[NAMA_KOLOM_LANDUSE] || "Tidak diketahui";
+                
+                if (areaTerlarang.includes(infoLahan)) {
+                    isTerlarang = true;
+                }
             }
+        }
+
+        // Terapkan warna marker berbeda jika area terlarang (Merah vs Biru)
+        if (currentMarker) currentMarker.remove();
+        currentMarker = new Marker({ color: isTerlarang ? '#dc3545' : '#003366' })
+            .setLngLat(clickedLngLat)
+            .addTo(map);
+
+        // Jika jatuh di area terlarang, hentikan proses dan tampilkan popup peringatan
+        if (isTerlarang) {
+            new Popup({ offset: 25 })
+                .setLngLat(clickedLngLat)
+                .setHTML(`
+                    <div style="font-size: 0.85rem; text-align: center; color: #dc3545; min-width: 210px;">
+                        <h6 class="fw-bold mb-1">🚫 Lokasi Tidak Valid</h6>
+                        <p class="mb-1">Titik berada di zona <b>${infoLahan}</b>.</p>
+                        <small class="text-muted">Kawasan ini tidak diperbolehkan/tidak layak untuk peruntukan hunian.</small>
+                    </div>
+                `)
+                .addTo(map);
+            return; // Hentikan eksekusi, tidak lanjut hitung skor
         }
 
         // B. Cek Berada di Wilayah Administrasi Mana (Kelurahan/Kecamatan)
@@ -217,7 +268,7 @@ map.on('load', async () => {
         let predikat = skorAkhir >= 75 ? 'Sangat Strategis (A)' : skorAkhir >= 50 ? 'Cukup Strategis (B)' : 'Kurang Strategis (C)';
         let badgeColor = skorAkhir >= 75 ? 'success' : skorAkhir >= 50 ? 'warning' : 'danger';
 
-        // E. Render Popup
+        // E. Render Popup Hasil Penilaian Valid
         const popupHTML = `
             <div style="font-size: 0.85rem; min-width: 220px; line-height: 1.4;">
                 <h6 class="fw-bold text-primary mb-1">🏠 Penilaian Lokasi Hunian</h6>
