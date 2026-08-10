@@ -182,7 +182,7 @@ map.on('load', async () => {
         let isTerlarang = false;
         
         // Daftar penggunaan lahan yang TIDAK VALID/TERLARANG untuk hunian
-        const areaTerlarang = ["Danau", "Sungai", "Makam", "Industri", "Pergudangan"];
+        const areaTerlarang = ["Danau", "Sungai", "Makam", "Industri", "Pergudangan","Rel", "Pertahanan dan Keamanan", "Sarana Transportasi", "Jalan", "Median Jalan", "Permukaan/Lapangan Diperkeras"];
 
         if (loadedLanduse && loadedLanduse.features) {
             const matchedFeature = loadedLanduse.features.find(f => turf.booleanPointInPolygon(userPoint, f));
@@ -229,10 +229,9 @@ map.on('load', async () => {
             }
         }
 
-        // C. Hitung Jarak ke Fasilitas Terdekat
+      // C. Hitung Jarak ke Fasilitas Terdekat (Logika Diperketat)
         let fasilitasHtml = "";
         let totalSkor = 0;
-        let jumlahKategori = 0;
         const kategoriList = ['Kesehatan', 'Pendidikan', 'Perdagangan dan Jasa', 'Transportasi', 'Peribadatan'];
 
         if (loadedToponimi && loadedToponimi.features) {
@@ -247,26 +246,41 @@ map.on('load', async () => {
 
                     fasilitasHtml += `<li><b>${kat}:</b> ${jarakMeter} meter</li>`;
 
-                    if (jarakMeter <= 500) {
-                        totalSkor += 25;
-                        jumlahKategori++;
-                    } else if (jarakMeter <= 1500) {
-                        totalSkor += 15;
-                        jumlahKategori++;
+                    // LOGIKA BARU: Penilaian lebih ketat (0-20 poin per fasilitas)
+                    if (jarakMeter <= 300) {
+                        totalSkor += 20; // Sangat dekat
+                    } else if (jarakMeter <= 800) {
+                        totalSkor += 12; // Menengah
+                    } else if (jarakMeter <= 2000) {
+                        totalSkor += 5;  // Jauh
                     } else {
-                        totalSkor += 5;
-                        jumlahKategori++;
+                        totalSkor += 0;  // Tidak ada akses
                     }
                 } else {
-                    fasilitasHtml += `<li><b>${kat}:</b> Tidak ada data</li>`;
+                    fasilitasHtml += `<li><b>${kat}:</b> Tidak terdeteksi</li>`;
                 }
             });
         }
 
         // D. Hitung Skor Akhir (Skala 0 - 100)
-        const skorAkhir = jumlahKategori > 0 ? Math.round((totalSkor / (jumlahKategori * 25)) * 100) : 0;
-        let predikat = skorAkhir >= 75 ? 'Sangat Strategis (A)' : skorAkhir >= 50 ? 'Cukup Strategis (B)' : 'Kurang Strategis (C)';
-        let badgeColor = skorAkhir >= 75 ? 'success' : skorAkhir >= 50 ? 'warning' : 'danger';
+        // Skor maksimal adalah 5 kategori x 20 poin = 100
+        const skorAkhir = totalSkor; 
+        
+        // Klasifikasi diperketat
+        let predikat, badgeColor;
+        if (skorAkhir >= 80) {
+            predikat = 'Sangat Strategis (A)';
+            badgeColor = 'success';
+        } else if (skorAkhir >= 60) {
+            predikat = 'Strategis (B)';
+            badgeColor = 'primary';
+        } else if (skorAkhir >= 40) {
+            predikat = 'Cukup Strategis (C)';
+            badgeColor = 'warning';
+        } else {
+            predikat = 'Kurang Strategis (D)';
+            badgeColor = 'danger';
+        }
 
         // E. Render Popup Hasil Penilaian Valid
         const popupHTML = `
