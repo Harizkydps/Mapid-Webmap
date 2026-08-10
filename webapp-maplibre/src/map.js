@@ -28,31 +28,55 @@ map.on('load', () => {
     }
 
     // ==========================================
-    // 1. LAYER PENGGUNAAN LAHAN - Awalnya Mati
+    // 1. LAYER PENGGUNAAN LAHAN 
     // ==========================================
     map.addSource('landuse-source', { type: 'geojson', data: landuseData });
 
-    map.addLayer({
-        id: 'layer-landuse',
-        type: 'fill',
-        source: 'landuse-source',
-        layout: { 'visibility': 'none' },
-        paint: {
-            'fill-color': [
-                'match',
-                ['get', NAMA_KOLOM_LANDUSE],
-                'Pertahanan dan Keamanan', '#3949ab',
-                'Permukiman', '#f39c12',
-                'Sawah', '#2ecc71',
-                'Perdagangan dan Jasa', '#e74c3c',
-                'RTH', '#27ae60',
-                'Industri', '#8e44ad',
-                '#95a5a6'
-            ],
-            'fill-opacity': 0.65,
-            'fill-outline-color': '#ffffff'
-        }
-    });
+map.addLayer({
+    id: 'layer-landuse',
+    type: 'fill',
+    source: 'landuse-source',
+    layout: { 'visibility': 'none' },
+    paint: {
+        'fill-color': [
+            'match',
+            ['get', NAMA_KOLOM_LANDUSE],
+            'Danau', '#3366cc',
+            'Industri', '#9b59b6',
+            'Jalan', '#00bcd4',
+            'Jalur Hijau', '#b5b838',
+            'Kolam', '#ff69b4',
+            'Lapangan Olahraga', '#9acd32',
+            'Makam', '#9370db',
+            'Median Jalan', '#40e0d0',
+            'Pariwisata dan Hiburan', '#ff1493',
+            'Perdagangan dan Jasa', '#2ecc71',
+            'Pergudangan', '#bdb76b',
+            'Perkantoran', '#4169e1',
+            'Permukaan/Lapangan Diperkeras', '#7b68ee',
+            'Permukiman', '#f39c12',
+            'Pertahanan dan Keamanan', '#a0522d',
+            'Rel', '#6495ed',
+            'Sarana Kesehatan', '#daa520',
+            'Sarana Olahraga', '#ff69b4',
+            'Sarana Pendidikan', '#228b22',
+            'Sarana Peribadatan', '#3cb371',
+            'Sarana Sosial', '#ff4500',
+            'Sarana Transportasi', '#483d8b',
+            'Sarana Utilitas', '#000080',
+            'Sawah', '#00ced1',
+            'Semak Belukar', '#da70d6',
+            'Sungai', '#ba55d3',
+            'Taman', '#32cd32',
+            'Tanah Kosong', '#d2691e',
+            'Tanaman Campuran', '#b22222',
+            'Tegalan/Ladang', '#7fff00',
+            '#95a5a6' // Warna default untuk all other values
+        ],
+        'fill-opacity': 0.65,
+        'fill-outline-color': '#ffffff'
+    }
+});
 
     // Event Hover & Click Pop-up Penggunaan Lahan
     map.on('mouseenter', 'layer-landuse', () => { map.getCanvas().style.cursor = 'pointer'; });
