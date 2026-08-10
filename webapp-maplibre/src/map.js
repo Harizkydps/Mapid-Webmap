@@ -1,5 +1,6 @@
-import { Map, NavigationControl, Popup } from 'maplibre-gl';
+import { Map, NavigationControl, Popup, Marker } from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
+import { geojsonToWKT } from '@terraformer/wkt';
 
 import toponimiData from './data/revisi_toponimi_surakarta.geojson?url';
 import admData from './data/adm_surakarta.geojson?url';
@@ -17,6 +18,7 @@ map.addControl(new NavigationControl(), "top-left");
 
 const NAMA_KOLOM = 'JENIS';
 const NAMA_KOLOM_LANDUSE = 'PENGGUNAAN';
+let currentMarker = null; // Variabel untuk menyimpan marker titik yang diklik user
 
 map.on('load', () => {
     const statusElem = document.getElementById('map-status');
@@ -56,6 +58,7 @@ map.on('load', () => {
     map.on('mouseenter', 'layer-landuse', () => { map.getCanvas().style.cursor = 'pointer'; });
     map.on('mouseleave', 'layer-landuse', () => { map.getCanvas().style.cursor = ''; });
     map.on('click', 'layer-landuse', (e) => {
+        e.originalEvent.stopPropagation(); // Mencegah klik tembus ke peta dasar
         const props = e.features[0].properties;
         const jenisLahan = props[NAMA_KOLOM_LANDUSE] || 'Tidak diketahui';
         
@@ -125,10 +128,46 @@ map.on('load', () => {
     // Event Hover & Click Pop-up Fasilitas
     map.on('mouseenter', 'layer-fasilitas', () => { map.getCanvas().style.cursor = 'pointer'; });
     map.on('mouseleave', 'layer-fasilitas', () => { map.getCanvas().style.cursor = ''; });
-    map.on('click', 'layer-fasilitas', (e) => { addToponimiPopup(map, e); });
+    map.on('click', 'layer-fasilitas', (e) => {
+        e.originalEvent.stopPropagation();
+        addToponimiPopup(map, e);
+    });
 
     // ==========================================
-    // 4. LOGIKA INTERAKSI CHECKBOX & SUB-GRUP
+    // 4. EVENT KLIK PETA UNTUK PENILAIAN HUNIAN (WKT CONVERSION)
+    // ==========================================
+    map.on('click', async (e) => {
+        const clickedLngLat = [e.lngLat.lng, e.lngLat.lat];
+
+        // Ubah titik klik menjadi GeoJSON Point lalu ke format WKT
+        const pointGeoJson = {
+            type: "Point",
+            coordinates: clickedLngLat
+        };
+        const wktPoint = geojsonToWKT(pointGeoJson);
+        console.log("WKT Point hasil klik:", wktPoint); // Cek Console browser (F12)
+
+        // Hapus marker lama jika ada, lalu buat marker baru
+        if (currentMarker) currentMarker.remove();
+        currentMarker = new Marker({ color: '#003366' })
+            .setLngLat(clickedLngLat)
+            .addTo(map);
+
+        // Tampilkan popup sementara untuk memastikan titik tertangkap
+        new Popup({ offset: 25 })
+            .setLngLat(clickedLngLat)
+            .setHTML(`
+                <div style="font-size: 0.85rem;">
+                    <strong>Titik Hunian Dipilih</strong><br>
+                    Koordinat: ${e.lngLat.lat.toFixed(4)}, ${e.lngLat.lng.toFixed(4)}<br>
+                    <small class="text-muted">WKT berhasil dibuat (cek console)</small>
+                </div>
+            `)
+            .addTo(map);
+    });
+
+    // ==========================================
+    // 5. LOGIKA INTERAKSI CHECKBOX & SUB-GRUP
     // ==========================================
 
     // A. Toggle Batas Administrasi
