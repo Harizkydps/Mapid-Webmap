@@ -1,24 +1,20 @@
-import { geojsonToWKT } from "@terraformer/wkt"
-const API_BASE = import.meta.env.VITE_API_BASE_URL ?? "http://127.0.0.1:5000";
+import * as turf from '@turf/turf';
 
-export function storeAreaGeometry(event) {
-    const geometry = event.features[0].geometry
-    const wkt = geojsonToWKT(geometry)
-
-    computeArea(wkt)
-}
-
-export async function computeArea(wkt){
-    const response = await fetch(`${API_BASE}/spatial_computation/area`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ geometry: wkt })
-    })
-
-    const result = await response.json()
-
-        const output = document.getElementById("luas");
-    output.textContent = `${result.area_ha.toLocaleString("ID-id")} ${result.unit}`
-
-    return result
+/**
+ * Fungsi untuk menghitung luas poligon GeoJSON menggunakan Turf.js
+ * @param {Object} polygonFeature - Fitur poligon GeoJSON
+ * @returns {String} - Luas format teks (m2 atau hektar)
+ */
+export function calculatePolygonArea(polygonFeature) {
+    try {
+        const areaM2 = turf.area(polygonFeature);
+        if (areaM2 >= 10000) {
+            const areaHa = (areaM2 / 10000).toFixed(2);
+            return `${areaHa} Hektar (${Math.round(areaM2).toLocaleString('id-ID')} m²)`;
+        }
+        return `${Math.round(areaM2).toLocaleString('id-ID')} m²`;
+    } catch (err) {
+        console.error("Gagal menghitung luas:", err);
+        return "Tidak dapat dihitung";
+    }
 }
