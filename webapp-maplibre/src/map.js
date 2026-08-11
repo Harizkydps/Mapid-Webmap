@@ -1,4 +1,4 @@
-import { Map, NavigationControl } from 'maplibre-gl';
+import { Map, NavigationControl, FullscreenControl } from 'maplibre-gl'; // <-- Tambahkan FullscreenControl di sini
 import 'maplibre-gl/dist/maplibre-gl.css';
 
 // Impor data GeoJSON
@@ -20,7 +20,16 @@ const map = new Map({
     customAttribution: '© Bappeda Kota Solo'
 });
 
+// Tambahkan Navigation Control dan Fullscreen Control di pojok kiri atas
 map.addControl(new NavigationControl(), "top-left");
+
+// PERUBAHAN DI SINI: Masukkan elemen wrapper agar panel samping ikut layar penuh
+map.addControl(
+    new FullscreenControl({ 
+        container: document.querySelector('.map-container-wrapper') 
+    }), 
+    "top-left"
+);
 
 const NAMA_KOLOM = 'JENIS';
 const NAMA_KOLOM_LANDUSE = 'PENGGUNAAN';

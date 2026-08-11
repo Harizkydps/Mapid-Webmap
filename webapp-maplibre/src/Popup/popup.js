@@ -11,6 +11,20 @@ export function getPenilaianStatus() {
     return isPenilaianActive;
 }
 
+// Helper untuk mendeteksi Kelurahan dan Kecamatan berdasarkan koordinat klik
+function getAdminRegion(point, loadedAdm) {
+    if (!loadedAdm?.features) return "Kota Surakarta";
+    const matchedAdm = loadedAdm.features.find(f => turf.booleanPointInPolygon(point, f));
+    if (matchedAdm?.properties) {
+        const kel = matchedAdm.properties.KELURAHAN || matchedAdm.properties.WADMKD || '';
+        const kec = matchedAdm.properties.KECAMATAN || matchedAdm.properties.WADMKC || '';
+        if (kel || kec) {
+            return `${kel ? 'Kel. ' + kel : ''}${kec ? ', Kec. ' + kec : ''}`;
+        }
+    }
+    return "Kota Surakarta";
+}
+
 export function initPenilaianClick(map, loadedLanduse, loadedAdm, loadedToponimi, namaKolom, kolomLanduse) {
     const btnToggle = document.getElementById('btn-toggle-penilaian');
     if (btnToggle) {
@@ -27,10 +41,10 @@ export function initPenilaianClick(map, loadedLanduse, loadedAdm, loadedToponimi
     }
 
     // ==========================================
-    // 1. EVENT KLIK UNTUK MODE PENILAIAN HUNIAN
+    // 1. EVENT KLIK UTAMA PADA PETA (MODE PENILAIAN)
     // ==========================================
     map.on('click', (e) => {
-        if (!isPenilaianActive) return; // Jika mode penilaian mati, abaikan event ini
+        if (!isPenilaianActive) return;
 
         const clickedLngLat = [e.lngLat.lng, e.lngLat.lat];
         const userPoint = turf.point(clickedLngLat);
@@ -47,10 +61,10 @@ export function initPenilaianClick(map, loadedLanduse, loadedAdm, loadedToponimi
 
         if (!isInsideSolo) {
             new Popup({ offset: 25 }).setLngLat(clickedLngLat).setHTML(`
-                <div style="font-size: 0.85rem; text-align: center; min-width: 210px; padding: 6px;">
+                <div style="font-size: 0.85rem; text-align: center; min-width: 210px; padding: 6px; font-family: 'Segoe UI', Tahoma, sans-serif;">
                     <div style="font-size: 1.5rem; margin-bottom: 4px;">📍❌</div>
-                    <h6 class="fw-bold text-danger mb-1">Diluar Wilayah Solo</h6>
-                    <p class="text-secondary small mb-0" style="font-size: 0.75rem;">Titik koordinat berada di luar batas administrasi Kota Surakarta.</p>
+                    <h6 style="font-weight: bold; color: #dc3545; margin-bottom: 4px;">Diluar Wilayah Solo</h6>
+                    <p style="color: #6c757d; font-size: 0.75rem; margin: 0;">Titik koordinat berada di luar batas administrasi Kota Surakarta.</p>
                 </div>
             `).addTo(map);
             return;
@@ -70,53 +84,44 @@ export function initPenilaianClick(map, loadedLanduse, loadedAdm, loadedToponimi
 
         if (isTerlarang) {
             new Popup({ offset: 25 }).setLngLat(clickedLngLat).setHTML(`
-                <div style="font-size: 0.85rem; text-align: center; min-width: 210px; padding: 6px;">
+                <div style="font-size: 0.85rem; text-align: center; width: 220px; box-sizing: border-box; padding: 6px; font-family: 'Segoe UI', Tahoma, sans-serif;">
                     <div style="font-size: 1.5rem; margin-bottom: 4px;">🚫</div>
-                    <h6 class="fw-bold text-danger mb-1">Lokasi Tidak Valid</h6>
-                    <p class="mb-1 text-muted small">Berada di zona:</p>
-                    <div class="badge bg-danger p-2 w-100 mb-2 text-wrap">${infoLahan}</div>
-                    <p class="text-secondary small mb-0" style="font-size: 0.75rem;">Kawasan ini tidak diizinkan atau tidak layak untuk peruntukan hunian.</p>
+                    <h6 style="font-weight: bold; color: #dc3545; margin-bottom: 4px;">Lokasi Tidak Valid</h6>
+                    <p style="color: #64748b; font-size: 0.75rem; margin-bottom: 4px;">Berada di zona:</p>
+                    <div style="background-color: #dc3545; color: #fff; padding: 4px 6px; border-radius: 4px; margin-bottom: 6px; font-size: 0.78rem; word-break: break-word;">${infoLahan}</div>
+                    <p style="color: #64748b; font-size: 0.7rem; margin: 0;">Kawasan ini tidak diizinkan untuk peruntukan hunian.</p>
                 </div>
             `).addTo(map);
             return;
         }
 
-        let infoWilayah = "Kota Surakarta";
-        if (loadedAdm?.features) {
-            const matchedAdm = loadedAdm.features.find(f => turf.booleanPointInPolygon(userPoint, f));
-            if (matchedAdm?.properties) {
-                const kel = matchedAdm.properties.KELURAHAN || matchedAdm.properties.WADMKD || '';
-                const kec = matchedAdm.properties.KECAMATAN || matchedAdm.properties.WADMKC || '';
-                if (kel || kec) infoWilayah = `${kel ? 'Kel. ' + kel : ''}${kec ? ', Kec. ' + kec : ''}`;
-            }
-        }
-
+        const infoWilayah = getAdminRegion(userPoint, loadedAdm);
         const scoreResult = calculateAccessibilityScore(userPoint, loadedToponimi, namaKolom);
 
         new Popup({ offset: 25 })
             .setLngLat(clickedLngLat)
             .setHTML(`
-                <div style="font-size: 0.82rem; min-width: 240px; max-width: 280px; line-height: 1.4; font-family: 'Segoe UI', Tahoma, sans-serif;">
-                    <div class="d-flex align-items-center gap-2 border-bottom pb-2 mb-2">
-                        <div style="background-color: #e6f0fa; color: #003366; width: 32px; height: 32px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0;">🏠</div>
-                        <div style="overflow: hidden;">
-                            <h6 class="fw-bold text-dark mb-0 text-truncate" style="font-size: 0.9rem;">Penilaian Hunian</h6>
-                            <span class="text-muted d-block text-truncate" style="font-size: 0.73rem;">📍 ${infoWilayah}</span>
+                <div style="font-size: 0.8rem; width: 230px; box-sizing: border-box; line-height: 1.3; font-family: 'Segoe UI', Tahoma, sans-serif; color: #333; padding: 2px;">
+                    <div style="display: flex; align-items: flex-start; gap: 8px; border-bottom: 1px solid #e2e8f0; padding-bottom: 6px; margin-bottom: 8px;">
+                        <div style="background-color: #e6f0fa; color: #003366; width: 26px; height: 26px; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; flex-shrink: 0; margin-top: 2px;">🏠</div>
+                        <div style="width: 100%;">
+                            <div style="font-weight: bold; color: #1e293b; font-size: 0.85rem; line-height: 1.2;">Penilaian Hunian</div>
+                            <div style="color: #64748b; font-size: 0.7rem; word-break: break-word; line-height: 1.2; margin-top: 2px;">📍 ${infoWilayah}</div>
                         </div>
                     </div>
-                    <div class="mb-2 p-2 rounded bg-light border border-light-subtle">
-                        <div class="text-muted text-uppercase fw-semibold" style="font-size: 0.68rem; letter-spacing: 0.5px;">Penggunaan Lahan</div>
-                        <div class="fw-bold text-primary mt-1 text-wrap" style="font-size: 0.83rem;">🌱 ${infoLahan}</div>
+                    <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 6px 8px; margin-bottom: 8px; box-sizing: border-box;">
+                        <div style="color: #64748b; font-size: 0.65rem; text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px; margin-bottom: 2px;">Penggunaan Lahan</div>
+                        <div style="color: #2563eb; font-weight: bold; font-size: 0.8rem; word-break: break-word;">🌱 ${infoLahan}</div>
                     </div>
-                    <div class="mb-2">
-                        <div class="fw-bold text-dark mb-1" style="font-size: 0.78rem;">📍 Jarak Fasilitas Terdekat:</div>
-                        <ul class="ps-3 mb-0 text-secondary" style="font-size: 0.77rem;">${scoreResult.fasilitasHtml}</ul>
+                    <div style="margin-bottom: 8px;">
+                        <div style="font-weight: bold; color: #1e293b; font-size: 0.75rem; margin-bottom: 3px;">📍 Jarak Fasilitas Terdekat:</div>
+                        <ul style="padding-left: 15px; margin: 0; color: #475569; font-size: 0.73rem;">${scoreResult.fasilitasHtml}</ul>
                     </div>
-                    <div class="mt-2 pt-2 border-top text-center">
-                        <div class="badge bg-${scoreResult.badgeColor} p-2 w-100 text-wrap shadow-sm" style="font-size: 0.78rem;">
-                            <span style="font-size: 0.7rem; opacity: 0.9; text-transform: uppercase; display: block;">Skor Aksesibilitas</span>
-                            <strong style="font-size: 0.95rem;">${scoreResult.skorAkhir} / 100</strong>
-                            <div style="font-size: 0.73rem; mt-1;">(${scoreResult.predikat})</div>
+                    <div style="border-top: 1px solid #e2e8f0; padding-top: 6px; text-align: center; box-sizing: border-box;">
+                        <div style="background-color: ${scoreResult.badgeColor === 'success' ? '#16a34a' : scoreResult.badgeColor === 'primary' ? '#2563eb' : scoreResult.badgeColor === 'warning' ? '#ca8a04' : '#dc2626'}; color: #fff; border-radius: 6px; padding: 6px; width: 100%; box-sizing: border-box;">
+                            <span style="font-size: 0.65rem; text-transform: uppercase; display: block; opacity: 0.9; font-weight: 600;">Skor Aksesibilitas</span>
+                            <strong style="font-size: 0.9rem; display: block; margin: 1px 0;">${scoreResult.skorAkhir} / 100</strong>
+                            <div style="font-size: 0.7rem; font-weight: 500;">(${scoreResult.predikat})</div>
                         </div>
                     </div>
                 </div>
@@ -125,33 +130,36 @@ export function initPenilaianClick(map, loadedLanduse, loadedAdm, loadedToponimi
     });
 
     // ==========================================
-    // 2. EVENT KLIK UNTUK EKSPLORASI LAYER PENGGUNAAN LAHAN (GUNLAH)
+    // 2. EVENT KLIK EKSPLORASI LAYER PENGGUNAAN LAHAN (GUNLAH)
     // ==========================================
     map.on('click', 'layer-landuse', (e) => {
-        if (isPenilaianActive) return; // Jangan bentrok dengan mode penilaian
+        if (isPenilaianActive) return;
         if (!e.features || e.features.length === 0) return;
 
         const feature = e.features[0];
         const props = feature.properties;
         const kategoriLahan = props[kolomLanduse] || "Tidak diketahui";
         const luasLahan = calculatePolygonArea(feature);
+        
+        const clickPoint = turf.point([e.lngLat.lng, e.lngLat.lat]);
+        const infoWilayah = getAdminRegion(clickPoint, loadedAdm);
 
         new Popup()
             .setLngLat(e.lngLat)
             .setHTML(`
-                <div style="font-size: 0.82rem; min-width: 210px; font-family: 'Segoe UI', Tahoma, sans-serif;">
-                    <h6 class="fw-bold text-primary mb-1">🌱 Informasi Penggunaan Lahan</h6>
-                    <hr class="my-1">
-                    <p class="mb-1"><b>Kategori:</b> ${kategoriLahan}</p>
-                    <p class="mb-1"><b>Luas Area:</b> ${luasLahan}</p>
-                    <small class="text-muted">Wilayah Kota Surakarta</small>
+                <div style="font-size: 0.8rem; width: 220px; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, sans-serif; padding: 2px;">
+                    <h6 style="font-weight: bold; color: #003366; font-size: 0.85rem; margin-bottom: 4px;">🌱 Informasi Penggunaan Lahan</h6>
+                    <hr style="border: none; border-top: 1px solid #e2e8f0; margin: 4px 0;">
+                    <p style="margin: 0 0 4px 0; font-size: 0.75rem;"><b>Kategori:</b> ${kategoriLahan}</p>
+                    <p style="margin: 0 0 4px 0; font-size: 0.75rem;"><b>Luas Area:</b> ${luasLahan}</p>
+                    <p style="margin: 0; color: #64748b; font-size: 0.7rem; word-break: break-word;">📍 ${infoWilayah}</p>
                 </div>
             `)
             .addTo(map);
     });
 
-   // ==========================================
-    // 3. EVENT KLIK UNTUK EKSPLORASI LAYER TOPONIMI (FASILITAS)
+    // ==========================================
+    // 3. EVENT KLIK EKSPLORASI LAYER TOPONIMI (FASILITAS)
     // ==========================================
     map.on('click', 'layer-fasilitas', (e) => {
         if (isPenilaianActive) return;
@@ -160,25 +168,28 @@ export function initPenilaianClick(map, loadedLanduse, loadedAdm, loadedToponimi
         const feature = e.features[0];
         const props = feature.properties;
         
-        // Menyesuaikan dengan properti asli dari GeoJSON Anda
         const namaTempat = props.NAMA_OBJEK || props.NAMMAP || props.NAMLOK || "Fasilitas Umum";
         const jenisTempat = props[namaKolom] || props.JENIS_UTAM || "Fasilitas";
-        const koordinat = `${e.lngLat.lat.toFixed(5)}, ${e.lngLat.lng.toFixed(5)}`;
+        const namaJalan = props.NAMSPE || props.NAMGAZ || "Jl. Kota Surakarta";
         
-        // Mengambil foto langsung dari properti FOTO1 GeoJSON Anda
+        const clickPoint = turf.point([e.lngLat.lng, e.lngLat.lat]);
+        const infoWilayah = getAdminRegion(clickPoint, loadedAdm);
+        
+        const koordinat = `${e.lngLat.lat.toFixed(5)}, ${e.lngLat.lng.toFixed(5)}`;
         const fotoUrl = props.FOTO1 || props.FOTO2 || "https://images.unsplash.com/photo-1582213782179-e0d53f98f2ca?w=400&auto=format&fit=crop&q=60";
 
         new Popup()
             .setLngLat(e.lngLat)
             .setHTML(`
-                <div style="font-size: 0.82rem; min-width: 230px; font-family: 'Segoe UI', Tahoma, sans-serif;">
-                    <div style="width: 100%; height: 120px; border-radius: 6px; overflow: hidden; margin-bottom: 8px; background-color: #f1f5f9;">
+                <div style="font-size: 0.8rem; width: 230px; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, sans-serif; padding: 2px;">
+                    <div style="width: 100%; height: 110px; border-radius: 6px; overflow: hidden; margin-bottom: 6px; background-color: #f1f5f9;">
                         <img src="${fotoUrl}" alt="Foto ${namaTempat}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.src='https://images.unsplash.com/photo-1582213782179-e0d53f98f2ca?w=400&auto=format&fit=crop&q=60'">
                     </div>
-                    <h6 class="fw-bold text-dark mb-1">${namaTempat}</h6>
-                    <span class="badge bg-primary text-white mb-2" style="font-size: 0.7rem;">${jenisTempat}</span>
-                    <p class="mb-1 text-muted" style="font-size: 0.75rem;"><b>Koordinat:</b> ${koordinat}</p>
-                    <p class="mb-0 text-secondary" style="font-size: 0.75rem;">📍 Surakarta, Jawa Tengah</p>
+                    <h6 style="font-weight: bold; color: #1e293b; font-size: 0.85rem; margin-bottom: 4px;">${namaTempat}</h6>
+                    <div style="background-color: #2563eb; color: #fff; display: inline-block; padding: 2px 6px; border-radius: 4px; font-size: 0.68rem; margin-bottom: 6px;">${jenisTempat}</div>
+                    <p style="margin: 0 0 3px 0; color: #334155; font-size: 0.73rem;">🛣️ <b>Jalan:</b> ${namaJalan}</p>
+                    <p style="margin: 0 0 3px 0; color: #64748b; font-size: 0.72rem;">📍 ${infoWilayah}</p>
+                    <p style="margin: 0; color: #94a3b8; font-size: 0.68rem;"><b>Koordinat:</b> ${koordinat}</p>
                 </div>
             `)
             .addTo(map);
