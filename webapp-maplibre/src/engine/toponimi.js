@@ -14,9 +14,12 @@ export function initToponimiLayer(map, toponimiDataUrl, kolomJenis) {
         type: 'circle',
         source: 'toponimi-source',
         filter: ['has', 'point_count'],
+        layout: { 'visibility': 'none' },
         paint: {
-            'circle-color': ['step', ['get', 'point_count'], '#51bbd6', 10, '#f1f075', 50, '#f28cb1'],
-            'circle-radius': ['step', ['get', 'point_count'], 15, 10, 20, 50, 25]
+            'circle-color': ['step', ['get', 'point_count'], '#3b82f6', 10, '#eab308', 50, '#ef4444'],
+            'circle-radius': ['step', ['get', 'point_count'], 16, 10, 22, 50, 28],
+            'circle-stroke-width': 2,
+            'circle-stroke-color': '#ffffff'
         }
     });
 
@@ -27,13 +30,17 @@ export function initToponimiLayer(map, toponimiDataUrl, kolomJenis) {
         source: 'toponimi-source',
         filter: ['has', 'point_count'],
         layout: {
+            'visibility': 'none',
             'text-field': '{point_count_abbreviated}',
             'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
-            'text-size': 12
+            'text-size': 13
+        },
+        paint: {
+            'text-color': '#ffffff'
         }
     });
 
-    // 4. Layer: Fasilitas Asli (Hanya muncul jika tidak di-cluster)
+    // 4. Layer: Fasilitas Asli (Titik Modern dengan Warna Kategori Lengkap)
     map.addLayer({
         id: 'layer-fasilitas',
         type: 'circle',
@@ -41,8 +48,8 @@ export function initToponimiLayer(map, toponimiDataUrl, kolomJenis) {
         filter: ['!', ['has', 'point_count']],
         layout: { 'visibility': 'none' },
         paint: {
-            'circle-radius': 6,
-            'circle-stroke-width': 1,
+            'circle-radius': 7,
+            'circle-stroke-width': 2,
             'circle-stroke-color': '#ffffff',
             'circle-color': [
                 'match', ['get', kolomJenis],
@@ -56,7 +63,7 @@ export function initToponimiLayer(map, toponimiDataUrl, kolomJenis) {
                 'Transportasi', '#5d4037',
                 'RTH', '#7cb342',
                 'Makam', '#546e7a',
-                '#0066cc'
+                '#0066cc' // Warna default jika tidak ada yang cocok
             ]
         }
     });
