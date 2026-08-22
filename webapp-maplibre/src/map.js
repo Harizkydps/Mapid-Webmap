@@ -71,29 +71,33 @@ map.on('load', async () => {
 // --- FITUR TOGGLE & HIDE PANEL MOBILE ---
 document.addEventListener('DOMContentLoaded', () => {
     const toggleBtn = document.getElementById('toggle-panel-btn');
-    const closeBtn = document.getElementById('close-panel-btn');
     const sidePanel = document.getElementById('side-panel');
 
     if (toggleBtn && sidePanel) {
-        // Buka panel saat tombol menu diklik
+        // Toggle panel dan ubah gaya tombol saat diklik
         toggleBtn.addEventListener('click', (e) => {
             e.stopPropagation();
-            sidePanel.classList.add('show');
+            sidePanel.classList.toggle('show');
+            
+            if (sidePanel.classList.contains('show')) {
+                toggleBtn.innerHTML = '✕ Tutup Panel';
+                toggleBtn.classList.remove('btn-primary');
+                toggleBtn.classList.add('btn-danger');
+            } else {
+                toggleBtn.innerHTML = '🗂️ Menu Layer';
+                toggleBtn.classList.remove('btn-danger');
+                toggleBtn.classList.add('btn-primary');
+            }
         });
 
-        // Tutup panel saat tombol silang/tutup diklik
-        if (closeBtn) {
-            closeBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                sidePanel.classList.remove('show');
-            });
-        }
-
-        // Menutup panel otomatis jika pengguna mengklik area di luar panel (atau area peta) saat panel terbuka
+        // Menutup panel otomatis jika pengguna mengklik area di luar panel (atau area peta) saat di HP
         document.addEventListener('click', (e) => {
             if (window.innerWidth <= 768) {
                 if (!sidePanel.contains(e.target) && e.target !== toggleBtn) {
                     sidePanel.classList.remove('show');
+                    toggleBtn.innerHTML = '🗂️ Menu Layer';
+                    toggleBtn.classList.remove('btn-danger');
+                    toggleBtn.classList.add('btn-primary');
                 }
             }
         });

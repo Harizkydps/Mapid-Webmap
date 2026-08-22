@@ -422,29 +422,46 @@ footer.main-footer p {
     font-weight: 600;
     text-decoration: none;
 }
-
 /* =========================================================
-   TAMBAHAN RESPONSIVE MOBILE UNTUK PANEL PETA
+   TAMBAHAN RESPONSIVE MOBILE UNTUK PANEL PETA (BOTTOM DRAWER)
    ========================================================= */
 @media (max-width: 768px) {
-    /* Sembunyikan panel di luar layar sebelah kanan secara default */
+    /* Ubah panel samping menjadi drawer yang muncul dari bawah layar di HP */
     .map-side-panel {
-        position: absolute;
-        top: 15px;
-        right: -320px; 
-        width: 280px;
-        max-height: calc(100vh - 100px);
-        transition: right 0.3s ease-in-out;
-        z-index: 1000;
+        position: fixed !important;
+        top: auto !important;
+        bottom: -100% !important; /* Sembunyikan di bawah layar secara default */
+        left: 0 !important;
+        right: 0 !important;
+        width: 100% !important;
+        max-height: 50vh !important; /* Batasi maksimal setengah layar agar peta tetap terlihat */
+        height: 50vh !important;
+        border-radius: 20px 20px 0 0 !important;
+        box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.2) !important;
+        transition: bottom 0.3s ease-in-out !important;
+        z-index: 1050 !important;
     }
 
-    /* Munculkan panel ketika kelas .show ditambahkan oleh JavaScript */
+    /* Munculkan panel dari bawah ketika kelas .show ditambahkan oleh JavaScript */
     .map-side-panel.show {
-        right: 15px;
+        bottom: 0 !important;
     }
 
-    /* Tampilkan tombol menu layer khusus di HP */
+    /* Tampilkan dan posisikan tombol menu layer mengambang di pojok kanan bawah HP */
     #toggle-panel-btn {
         display: block !important;
+        position: fixed !important;
+        bottom: 20px !important;
+        right: 20px !important;
+        z-index: 1060 !important;
+        padding: 10px 20px !important;
+        border-radius: 50px !important;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3) !important;
+    }
+
+    /* Sesuaikan wrapper peta agar ruangnya pas di HP */
+    .map-container-wrapper {
+        height: calc(100vh - 140px) !important;
+        min-height: 400px !important;
     }
 }

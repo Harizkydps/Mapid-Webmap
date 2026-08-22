@@ -23,7 +23,6 @@
             border-radius: 8px;
         }
 
-        /* Styling Panel */
         .map-side-panel {
             position: absolute;
             top: 15px;
@@ -37,34 +36,37 @@
             z-index: 10;
             overflow-y: auto;
             padding: 15px;
-            transition: transform 0.3s ease;
         }
 
-        /* Tombol Toggle Mobile */
+        /* Tombol Toggle Mobile (Awalnya tersembunyi di Desktop) */
         #toggle-panel-btn {
             display: none;
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            z-index: 11;
         }
 
-        /* Responsive Mobile */
-        @media (max-width: 768px) {
-            .map-side-panel {
-                transform: translateX(120%); /* Sembunyikan ke kanan */
-            }
-            .map-side-panel.show {
-                transform: translateX(0);
-            }
-            #toggle-panel-btn {
-                display: block;
-            }
+        .legend-color {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            display: inline-block;
+            flex-shrink: 0;
         }
 
-        .legend-color { width: 14px; height: 14px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
-        .filter-item { display: flex; align-items: center; gap: 8px; font-size: 0.85rem; margin-bottom: 8px; cursor: pointer; }
-        .sub-group-container { padding-left: 20px; border-left: 2px solid #e9ecef; margin-top: 8px; margin-bottom: 10px; display: none; }
+        .filter-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            margin-bottom: 8px;
+            cursor: pointer;
+        }
+
+        .sub-group-container {
+            padding-left: 20px;
+            border-left: 2px solid #e9ecef;
+            margin-top: 8px;
+            margin-bottom: 10px;
+            display: none; /* Awalnya tersembunyi */
+        }
     </style>
 </head>
 <body class="map-page-body">
@@ -82,15 +84,19 @@
     </header>
 
     <main class="container-fluid my-3 px-4">
-        <!-- Tombol Toggle muncul di mobile saja -->
-        <button id="toggle-panel-btn" class="btn btn-primary btn-sm">🗂️ Menu</button>
+        <!-- Tombol Mengambang (Floating Action Button) Khusus untuk HP -->
+        <button id="toggle-panel-btn" class="btn btn-primary btn-sm fw-bold shadow">
+            🗂️ Menu Layer
+        </button>
 
         <div class="d-flex justify-content-between align-items-center mb-3">
             <div>
                 <h1 class="h4 fw-bold mb-0" style="color: #003366;">🗺️ Peta Interaktif Aksesibilitas Hunian Solo</h1>
                 <p class="text-muted small mb-0">Eksplorasi lokasi fasilitas, jaringan pendukung, dan wilayah Administrasi Kota Surakarta.</p>
             </div>
-            <div id="map-status" class="badge bg-primary p-2">⏳ Memuat Peta...</div>
+            <div id="map-status" class="badge bg-primary p-2">
+                ⏳ Memuat Peta...
+            </div>
         </div>
 
         <div class="map-container-wrapper">
@@ -98,12 +104,17 @@
 
             <div class="map-side-panel" id="side-panel">
                 <h6 class="fw-bold border-bottom pb-2 mb-3" style="color: #003366;">🗂️ Pengaturan Layer Peta</h6>
-                
+
+                <!-- Tombol Mode Penilaian Hunian di dalam Panel -->
                 <div class="mb-3 p-3 bg-light rounded border">
                     <h6 class="fw-bold mb-2 text-primary" style="font-size: 0.9rem;">📍 Mode Penilaian Hunian</h6>
-                    <button id="btn-toggle-penilaian" class="btn btn-sm btn-outline-primary w-100 fw-bold">🟢 Aktifkan Mode Penilaian</button>
+                    <p class="text-muted small mb-2">Aktifkan mode ini lalu klik di peta untuk menilai lokasi hunian.</p>
+                    <button id="btn-toggle-penilaian" class="btn btn-sm btn-outline-primary w-100 fw-bold">
+                        🟢 Aktifkan Mode Penilaian
+                    </button>
                 </div>
 
+                <!-- 1. Menu Batas Administrasi -->
                 <div class="mb-3">
                     <label class="filter-item fw-bold text-dark mb-1">
                         <input type="checkbox" id="check-adm" checked class="form-check-input mt-0">
@@ -111,25 +122,63 @@
                     </label>
                 </div>
 
+                <!-- 2. Menu Penggunaan Lahan dengan Sub-Grup -->
                 <div class="mb-3">
                     <label class="filter-item fw-bold text-dark mb-1">
                         <input type="checkbox" id="check-landuse-parent" class="form-check-input mt-0">
                         <span>🌱 Penggunaan Lahan</span>
                     </label>
                     <div id="sub-landuse" class="sub-group-container">
-                        <!-- List kategori tetap sama -->
+                        <label class="filter-item"><input type="checkbox" class="check-landuse-kategori form-check-input mt-0" value="Danau" checked><span class="legend-color" style="background-color: #3366cc;"></span><span>Danau</span></label>
+                        <label class="filter-item"><input type="checkbox" class="check-landuse-kategori form-check-input mt-0" value="Industri" checked><span class="legend-color" style="background-color: #9b59b6;"></span><span>Industri</span></label>
+                        <label class="filter-item"><input type="checkbox" class="check-landuse-kategori form-check-input mt-0" value="Jalan" checked><span class="legend-color" style="background-color: #00bcd4;"></span><span>Jalan</span></label>
+                        <label class="filter-item"><input type="checkbox" class="check-landuse-kategori form-check-input mt-0" value="Jalur Hijau" checked><span class="legend-color" style="background-color: #b5b838;"></span><span>Jalur Hijau</span></label>
+                        <label class="filter-item"><input type="checkbox" class="check-landuse-kategori form-check-input mt-0" value="Kolam" checked><span class="legend-color" style="background-color: #ff69b4;"></span><span>Kolam</span></label>
+                        <label class="filter-item"><input type="checkbox" class="check-landuse-kategori form-check-input mt-0" value="Lapangan Olahraga" checked><span class="legend-color" style="background-color: #9acd32;"></span><span>Lapangan Olahraga</span></label>
+                        <label class="filter-item"><input type="checkbox" class="check-landuse-kategori form-check-input mt-0" value="Makam" checked><span class="legend-color" style="background-color: #9370db;"></span><span>Makam</span></label>
+                        <label class="filter-item"><input type="checkbox" class="check-landuse-kategori form-check-input mt-0" value="Median Jalan" checked><span class="legend-color" style="background-color: #40e0d0;"></span><span>Median Jalan</span></label>
+                        <label class="filter-item"><input type="checkbox" class="check-landuse-kategori form-check-input mt-0" value="Pariwisata dan Hiburan" checked><span class="legend-color" style="background-color: #ff1493;"></span><span>Pariwisata dan Hiburan</span></label>
+                        <label class="filter-item"><input type="checkbox" class="check-landuse-kategori form-check-input mt-0" value="Perdagangan dan Jasa" checked><span class="legend-color" style="background-color: #2ecc71;"></span><span>Perdagangan dan Jasa</span></label>
+                        <label class="filter-item"><input type="checkbox" class="check-landuse-kategori form-check-input mt-0" value="Pergudangan" checked><span class="legend-color" style="background-color: #bdb76b;"></span><span>Pergudangan</span></label>
+                        <label class="filter-item"><input type="checkbox" class="check-landuse-kategori form-check-input mt-0" value="Perkantoran" checked><span class="legend-color" style="background-color: #4169e1;"></span><span>Perkantoran</span></label>
+                        <label class="filter-item"><input type="checkbox" class="check-landuse-kategori form-check-input mt-0" value="Permukaan/Lapangan Diperkeras" checked><span class="legend-color" style="background-color: #7b68ee;"></span><span>Permukaan/Lapangan Diperkeras</span></label>
                         <label class="filter-item"><input type="checkbox" class="check-landuse-kategori form-check-input mt-0" value="Permukiman" checked><span class="legend-color" style="background-color: #f39c12;"></span><span>Permukiman</span></label>
-                        <!-- (Tolong tambahkan kategori lainnya disini seperti kode Anda sebelumnya) -->
+                        <label class="filter-item"><input type="checkbox" class="check-landuse-kategori form-check-input mt-0" value="Pertahanan dan Keamanan" checked><span class="legend-color" style="background-color: #a0522d;"></span><span>Pertahanan dan Keamanan</span></label>
+                        <label class="filter-item"><input type="checkbox" class="check-landuse-kategori form-check-input mt-0" value="Rel" checked><span class="legend-color" style="background-color: #6495ed;"></span><span>Rel</span></label>
+                        <label class="filter-item"><input type="checkbox" class="check-landuse-kategori form-check-input mt-0" value="Sarana Kesehatan" checked><span class="legend-color" style="background-color: #daa520;"></span><span>Sarana Kesehatan</span></label>
+                        <label class="filter-item"><input type="checkbox" class="check-landuse-kategori form-check-input mt-0" value="Sarana Olahraga" checked><span class="legend-color" style="background-color: #ff69b4;"></span><span>Sarana Olahraga</span></label>
+                        <label class="filter-item"><input type="checkbox" class="check-landuse-kategori form-check-input mt-0" value="Sarana Pendidikan" checked><span class="legend-color" style="background-color: #228b22;"></span><span>Sarana Pendidikan</span></label>
+                        <label class="filter-item"><input type="checkbox" class="check-landuse-kategori form-check-input mt-0" value="Sarana Peribadatan" checked><span class="legend-color" style="background-color: #3cb371;"></span><span>Sarana Peribadatan</span></label>
+                        <label class="filter-item"><input type="checkbox" class="check-landuse-kategori form-check-input mt-0" value="Sarana Sosial" checked><span class="legend-color" style="background-color: #ff4500;"></span><span>Sarana Sosial</span></label>
+                        <label class="filter-item"><input type="checkbox" class="check-landuse-kategori form-check-input mt-0" value="Sarana Transportasi" checked><span class="legend-color" style="background-color: #483d8b;"></span><span>Sarana Transportasi</span></label>
+                        <label class="filter-item"><input type="checkbox" class="check-landuse-kategori form-check-input mt-0" value="Sarana Utilitas" checked><span class="legend-color" style="background-color: #000080;"></span><span>Sarana Utilitas</span></label>
+                        <label class="filter-item"><input type="checkbox" class="check-landuse-kategori form-check-input mt-0" value="Sawah" checked><span class="legend-color" style="background-color: #00ced1;"></span><span>Sawah</span></label>
+                        <label class="filter-item"><input type="checkbox" class="check-landuse-kategori form-check-input mt-0" value="Semak Belukar" checked><span class="legend-color" style="background-color: #da70d6;"></span><span>Semak Belukar</span></label>
+                        <label class="filter-item"><input type="checkbox" class="check-landuse-kategori form-check-input mt-0" value="Sungai" checked><span class="legend-color" style="background-color: #ba55d3;"></span><span>Sungai</span></label>
+                        <label class="filter-item"><input type="checkbox" class="check-landuse-kategori form-check-input mt-0" value="Taman" checked><span class="legend-color" style="background-color: #32cd32;"></span><span>Taman</span></label>
+                        <label class="filter-item"><input type="checkbox" class="check-landuse-kategori form-check-input mt-0" value="Tanah Kosong" checked><span class="legend-color" style="background-color: #d2691e;"></span><span>Tanah Kosong</span></label>
+                        <label class="filter-item"><input type="checkbox" class="check-landuse-kategori form-check-input mt-0" value="Tanaman Campuran" checked><span class="legend-color" style="background-color: #b22222;"></span><span>Tanaman Campuran</span></label>
+                        <label class="filter-item"><input type="checkbox" class="check-landuse-kategori form-check-input mt-0" value="Tegalan/Ladang" checked><span class="legend-color" style="background-color: #7fff00;"></span><span>Tegalan/Ladang</span></label>
                     </div>
                 </div>
 
+                <!-- 3. Menu Toponimi (Fasilitas) dengan Sub-Grup -->
                 <div class="mb-3">
                     <label class="filter-item fw-bold text-dark mb-1">
                         <input type="checkbox" id="check-toponimi-parent" class="form-check-input mt-0">
                         <span>🏢 Filter Fasilitas Toponimi</span>
                     </label>
                     <div id="sub-toponimi" class="sub-group-container">
-                        <!-- List kategori tetap sama -->
+                        <label class="filter-item"><input type="checkbox" class="check-kategori form-check-input mt-0" value="Kesehatan" checked><span class="legend-color" style="background-color: #e53935;"></span><span>🏥 Kesehatan</span></label>
+                        <label class="filter-item"><input type="checkbox" class="check-kategori form-check-input mt-0" value="Pendidikan" checked><span class="legend-color" style="background-color: #1e88e5;"></span><span>🎓 Pendidikan</span></label>
+                        <label class="filter-item"><input type="checkbox" class="check-kategori form-check-input mt-0" value="Perdagangan dan Jasa" checked><span class="legend-color" style="background-color: #fb8c00;"></span><span>🛍️ Perdagangan & Jasa</span></label>
+                        <label class="filter-item"><input type="checkbox" class="check-kategori form-check-input mt-0" value="Peribadatan" checked><span class="legend-color" style="background-color: #8e24aa;"></span><span>🕌 Peribadatan</span></label>
+                        <label class="filter-item"><input type="checkbox" class="check-kategori form-check-input mt-0" value="Olahraga" checked><span class="legend-color" style="background-color: #43a047;"></span><span>⚽ Olahraga</span></label>
+                        <label class="filter-item"><input type="checkbox" class="check-kategori form-check-input mt-0" value="Pariwisata dan Hiburan" checked><span class="legend-color" style="background-color: #00acc1;"></span><span>🏖️ Pariwisata</span></label>
+                        <label class="filter-item"><input type="checkbox" class="check-kategori form-check-input mt-0" value="Pertahanan dan Keamanan" checked><span class="legend-color" style="background-color: #3949ab;"></span><span>🛡️ Keamanan</span></label>
+                        <label class="filter-item"><input type="checkbox" class="check-kategori form-check-input mt-0" value="Transportasi" checked><span class="legend-color" style="background-color: #5d4037;"></span><span>🚌 Transportasi</span></label>
+                        <label class="filter-item"><input type="checkbox" class="check-kategori form-check-input mt-0" value="RTH" checked><span class="legend-color" style="background-color: #7cb342;"></span><span>🌳 RTH</span></label>
+                        <label class="filter-item"><input type="checkbox" class="check-kategori form-check-input mt-0" value="Makam" checked><span class="legend-color" style="background-color: #546e7a;"></span><span>🪦 Makam</span></label>
                     </div>
                 </div>
 
@@ -137,16 +186,21 @@
                 <div id="detail-info" class="mb-3">
                     <p class="text-muted small italic">Klik salah satu objek di peta untuk melihat detailnya.</p>
                 </div>
+
+                <!-- Tambahan Atribut Sumber Data Bappeda Kota Solo di Sidebar -->
+                <div class="mt-3 pt-2 border-top text-center">
+                    <small class="text-muted" style="font-size: 0.75rem;">
+                        📂 Sumber Data Spasial: <strong style="color: #003366;">Bappeda Kota Solo</strong>
+                    </small>
+                </div>
             </div>
         </div>
     </main>
 
-    <script>
-        // Logika sederhana untuk tombol toggle
-        document.getElementById('toggle-panel-btn').addEventListener('click', function() {
-            document.getElementById('side-panel').classList.toggle('show');
-        });
-    </script>
+    <footer class="footer mt-auto">
+        <p>&copy; 2026 WebGIS Penilaian Hunian Kota Solo. Tugas Bootcamp WebGIS MAPID x UNDIP.</p>
+    </footer>
+
     <script src="https://unpkg.com/maplibre-gl@latest/dist/maplibre-gl.js"></script>
     <script type="module" src="./src/map.js"></script>
 </body>
