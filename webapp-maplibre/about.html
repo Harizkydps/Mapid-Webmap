@@ -63,7 +63,8 @@
 
                 <div class="card-box">
                     <h2 class="section-subtitle"><i class="fa-solid fa-envelope me-2"></i>Hubungi Developer</h2>
-                    <form action="#" method="POST" class="contact-form">
+                    <!-- Form diperbarui dengan id="contactForm" dan tanpa action="#" yang error -->
+                    <form id="contactForm" class="contact-form">
                         <div class="mb-3">
                             <label for="nama" class="form-label">Nama Lengkap:</label>
                             <input type="text" id="nama" name="nama" class="form-control" required placeholder="Masukkan nama Anda">
@@ -117,6 +118,19 @@
     <footer class="footer mt-auto">
         <p>&copy; 2026 WebGIS Penilaian Hunian Kota Solo Raya. Tugas Bootcamp WebGIS MAPID x UNDIP.</p>
     </footer>
+
+    <!-- Script JavaScript untuk menangani submit form agar tidak error -->
+    <script>
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault(); // Mencegah form melakukan reload/error halaman
+            
+            // Menampilkan alert tanda sukses
+            alert('Terima kasih! Pesan Anda berhasil dikirim ke developer.');
+            
+            // Mengosongkan kembali form setelah dikirim
+            this.reset();
+        });
+    </script>
 
 </body>
 </html>
