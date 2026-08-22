@@ -68,18 +68,28 @@ map.on('load', async () => {
     initPenilaianClick(map, loadedLanduse, loadedAdm, loadedToponimi, NAMA_KOLOM, NAMA_KOLOM_LANDUSE);
 });
 
-// --- FITUR TOGGLE PANEL MOBILE ---
+// --- FITUR TOGGLE & HIDE PANEL MOBILE ---
 document.addEventListener('DOMContentLoaded', () => {
     const toggleBtn = document.getElementById('toggle-panel-btn');
+    const closeBtn = document.getElementById('close-panel-btn');
     const sidePanel = document.getElementById('side-panel');
 
     if (toggleBtn && sidePanel) {
+        // Buka panel saat tombol menu diklik
         toggleBtn.addEventListener('click', (e) => {
             e.stopPropagation();
-            sidePanel.classList.toggle('show');
+            sidePanel.classList.add('show');
         });
 
-        // Menutup panel otomatis jika pengguna mengklik area peta di luar panel saat panel terbuka
+        // Tutup panel saat tombol silang/tutup diklik
+        if (closeBtn) {
+            closeBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                sidePanel.classList.remove('show');
+            });
+        }
+
+        // Menutup panel otomatis jika pengguna mengklik area di luar panel (atau area peta) saat panel terbuka
         document.addEventListener('click', (e) => {
             if (window.innerWidth <= 768) {
                 if (!sidePanel.contains(e.target) && e.target !== toggleBtn) {

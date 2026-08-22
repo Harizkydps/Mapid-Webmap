@@ -422,3 +422,29 @@ footer.main-footer p {
     font-weight: 600;
     text-decoration: none;
 }
+
+/* =========================================================
+   TAMBAHAN RESPONSIVE MOBILE UNTUK PANEL PETA
+   ========================================================= */
+@media (max-width: 768px) {
+    /* Sembunyikan panel di luar layar sebelah kanan secara default */
+    .map-side-panel {
+        position: absolute;
+        top: 15px;
+        right: -320px; 
+        width: 280px;
+        max-height: calc(100vh - 100px);
+        transition: right 0.3s ease-in-out;
+        z-index: 1000;
+    }
+
+    /* Munculkan panel ketika kelas .show ditambahkan oleh JavaScript */
+    .map-side-panel.show {
+        right: 15px;
+    }
+
+    /* Tampilkan tombol menu layer khusus di HP */
+    #toggle-panel-btn {
+        display: block !important;
+    }
+}
