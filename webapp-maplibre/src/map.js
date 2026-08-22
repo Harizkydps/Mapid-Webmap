@@ -67,3 +67,25 @@ map.on('load', async () => {
     // Aktifkan event klik penilaian setelah data siap
     initPenilaianClick(map, loadedLanduse, loadedAdm, loadedToponimi, NAMA_KOLOM, NAMA_KOLOM_LANDUSE);
 });
+
+// --- FITUR TOGGLE PANEL MOBILE ---
+document.addEventListener('DOMContentLoaded', () => {
+    const toggleBtn = document.getElementById('toggle-panel-btn');
+    const sidePanel = document.getElementById('side-panel');
+
+    if (toggleBtn && sidePanel) {
+        toggleBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            sidePanel.classList.toggle('show');
+        });
+
+        // Menutup panel otomatis jika pengguna mengklik area peta di luar panel saat panel terbuka
+        document.addEventListener('click', (e) => {
+            if (window.innerWidth <= 768) {
+                if (!sidePanel.contains(e.target) && e.target !== toggleBtn) {
+                    sidePanel.classList.remove('show');
+                }
+            }
+        });
+    }
+});
